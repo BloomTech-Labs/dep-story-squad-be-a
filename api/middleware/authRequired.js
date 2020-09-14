@@ -10,6 +10,14 @@ const oktaJwtVerifier = new OktaJwtVerifier({
   },
 });
 
+const testJWT = {
+  claims: {
+    uid: "",
+    username: ""
+  },
+};
+
+
 /**
  * A simple middleware that asserts valid access tokens and sends 401 responses
  * if the token is not present or fails validation.  If the token is valid its
@@ -17,6 +25,10 @@ const oktaJwtVerifier = new OktaJwtVerifier({
  */
 const authRequired = async (req, res, next) => {
   try {
+    if (process.env.NODE_ENV === "testing") {
+      req.jwt = testJWT;
+      return next();
+    }
     const authHeader = req.headers.authorization || '';
     const match = authHeader.match(/Bearer (.+)/);
 

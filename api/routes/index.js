@@ -15,8 +15,19 @@ const router = express.Router();
  * @apiExample {curl} Example usage:
  *     curl -i http://localhost:3000/
  */
-router.get('/', function (req, res) {
-  res.status(200).json({ api: 'up' });
+router.get('/', (req, res) => {
+  if (req.userContext) {
+    console.log(req.session.passport.user.tokens)
+    // res.json({ token: req.session.passport.user.tokens })
+    // const token = req.session.passport.user.tokens
+    res.send(`
+      Hello ${req.userContext.userinfo.name}!
+      <form method="POST" action="/logout">
+        <button type="submit">Logout</button>
+      </form>
+    `);
+  } else {
+    res.send('Please <a href="/login">login</a>');
+  }
 });
-
 export default router;
