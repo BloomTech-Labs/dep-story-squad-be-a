@@ -32,7 +32,7 @@ const authRequired = async (req, res, next) => {
     const authHeader = req.headers.authorization || '';
     const match = authHeader.match(/Bearer (.+)/);
 
-    if (!match) throw new Error('Please Login to access this resource');
+    if (!match) throw new Error('Please Login to access this resource!!');
 
     const accessToken = match[1];
     oktaJwtVerifier.verifyAccessToken(accessToken, expectedAudience);
