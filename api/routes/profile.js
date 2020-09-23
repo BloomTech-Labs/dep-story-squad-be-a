@@ -33,7 +33,8 @@ const router = express.Router();
  * @apiExample {curl} Example usage:
  *     curl -i http://localhost:8000/profiles
  */
-router.get('/', authRequired, function (req, res) {
+// router.get('/', authRequired, function (req, res) {
+router.get('/', function (req, res) {
   Profiles.findAll().then((profiles) => {
     res.status(200).json(profiles);
   });
