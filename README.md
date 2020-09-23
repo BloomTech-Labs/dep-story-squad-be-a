@@ -9,7 +9,11 @@
 
 ## API doc
 
-All routes can be viewed in the [DOCUMENTATION.md](DOCUMENTATION.md) file
+All routes can be viewed in the [/documentation/APIDOCS.md](./documentation/APIDOCS.md) file
+
+## DB doc
+
+Table info can be viewed in the [/documentation/DBDOCS.md](./documentation/DBDOCS.md) file
 
 ## Getting Started
 
@@ -30,6 +34,14 @@ All routes can be viewed in the [DOCUMENTATION.md](DOCUMENTATION.md) file
 - run: `npm run knex -- seed:run` to populate your db with some data.
 - run: `npm run tests` to confirm all is setup and tests pass.
 - run: `npm start` to start your local development server.
+
+## Environment Variables for Dev/Testing
+
+>`PORT=8000`<br>
+>`PG_CONNECTION_STRING=postgres://docker:docker@127.0.0.1:5400/api-dev`<br>
+>`NODE_ENV="testing"`<br>
+>`BASE_URL="https://localhost:8000"`<br>
+>`SESSION_SECRET="another secret"`
 
 ## Contributing
 
