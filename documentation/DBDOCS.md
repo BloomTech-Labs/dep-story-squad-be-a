@@ -4,6 +4,7 @@
 | Name | Type | Required | Unique | Notes |
 |------|------|----------|--------|-------|
 | account_id | uuid | yes | yes | account id (auto-generated) |
+| okta_id | uuid | yes | yes | Okta uuid (from token) |
 | email | string | yes | yes | email linked to account |
 | username | string | yes | yes | account username for display |
 | student_ids | text array | no | no | array of studen ids linked to account |

@@ -13,7 +13,8 @@ const oktaJwtVerifier = new OktaJwtVerifier({
 const testJWT = {
   claims: {
     uid: "",
-    username: ""
+    username: "",
+    email: ""
   },
 };
 
@@ -35,7 +36,13 @@ const authRequired = async (req, res, next) => {
     if (!match) throw new Error('Please Login to access this resource!!');
 
     const accessToken = match[1];
-    oktaJwtVerifier.verifyAccessToken(accessToken, expectedAudience);
+    oktaJwtVerifier.verifyAccessToken(accessToken, expectedAudience)
+    .then( jwt => {
+      req.jwt = jwt;
+    })
+    .catch( err => {
+      res.status(500).json({ message: "Okta JWT validation failed." });
+    })
     next();
   } catch (err) {
     next(createError(401, err.message));
