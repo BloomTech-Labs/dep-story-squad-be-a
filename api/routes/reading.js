@@ -9,7 +9,7 @@ router.get('/:reading_id', (req, res) => {
         if (!reading) {
             res.status(404).json({ message: 'Reading not found.' })
         } else {
-            res.status(400).json(reading);
+            res.status(200).json(reading);
         }
     })
     .catch(err => {
