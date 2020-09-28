@@ -35,6 +35,12 @@ Returns:
     }
 ```
 
+| HTTP Response Code | Reason                 |
+|--------------------|------------------------|
+| 200 | Success |
+| 401 | PIN token/DB mismatch |
+| 404 | User logged in to Okta but not in DB |
+
 ### <a name="POST/api/account/login"></a>POST /api/account/login
 Request body:
 ```json
@@ -58,6 +64,11 @@ Returns:
     }
 ```
 
+| HTTP Response Code | Reason                 |
+|--------------------|------------------------|
+| 201 | Success |
+| 500 | Failed to add user |
+
 ### <a name="GET/reading/:reading_id"></a>GET /api/reading/:reading_id
 Request body:
 ```json
@@ -75,3 +86,9 @@ Returns:
         "s3_key": "string"
     }
 ```
+
+| HTTP Response Code | Reason                 |
+|--------------------|------------------------|
+| 200 | Success |
+| 404 | No reading found with provided ID |
+| 500 | Failed to retrieve reading |

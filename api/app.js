@@ -8,8 +8,14 @@ import helmet from 'helmet';
 const { ExpressOIDC } = require('@okta/oidc-middleware');
 const session = require('express-session');
 
+// Middleware:
+import authRequired from './middleware/authRequired';
+
+// Routers:
 import indexRouter from './routes/index';
 import profileRouter from './routes/profile';
+import accountRouter from './routes/account';
+import readingRouter from './routes/reading';
 
 var app = express();
 
@@ -49,6 +55,8 @@ app.use(oidc.router);
 // application routes
 app.use('/', indexRouter);
 app.use(['/profile', '/profiles'], profileRouter);
+app.use('/account', authRequired, accountRouter);
+app.use('/reading', authRequired, readingRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
