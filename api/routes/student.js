@@ -65,7 +65,18 @@ router.post('/', (req, res)=>{
             studentData.pin = hash;
             Student.add(studentData)
             .then(student => {
-                res.status(201).json(student);
+                Account.findById(student.account_id)
+                .then(account => {
+                    student_ids = account.student_ids;
+                    student_ids.push(student.student_id);
+                    Account.updateById({student_ids: student_ids }, student.account_id)
+                    .then(updated_account => {
+                        res.status(201).json(student);
+                    })
+                    .catch(err => {
+                        res.status(500).json({ message: 'Failed to update account list of student IDs.'});
+                    })
+                })
             })
             .catch (err => {
                 res.status(500).json({ message: 'Failed to add student', error: err });

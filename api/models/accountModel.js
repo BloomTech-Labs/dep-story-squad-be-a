@@ -4,7 +4,8 @@ module.exports = {
     findById,
     findByEmail,
     add,
-    update
+    update,
+    updateById
 }
 
 function findById(id) {
@@ -26,5 +27,11 @@ function add(new_account) {
 function update(new_data, email) {
     return db("account")
         .where({ email: email })
+        .update(new_data)
+}
+
+function updateById(new_data, id) {
+    return db("account")
+        .where({ account_id: id })
         .update(new_data)
 }
