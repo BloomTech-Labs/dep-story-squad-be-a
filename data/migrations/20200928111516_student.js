@@ -17,6 +17,8 @@ exports.up = function(knex) {
         tbl.string('username')
             .notNullable()
             .unique();
+        tbl.string('hashed_pin')
+            .notNullable();
         tbl.json('settings')
             .defaultTo({});
         tbl.json('records')

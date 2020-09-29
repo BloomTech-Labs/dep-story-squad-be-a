@@ -18,7 +18,7 @@
 | okta_id | uuid | yes | yes | Okta uuid (from token) |
 | email | string | yes | yes | email linked to account |
 | username | string | yes | yes | account username for display |
-| student_ids | text array | no | no | array of studen ids linked to account |
+| student_ids | text array | no | no | array of student ids linked to account |
 | [settings](#account.settings) | json | yes | no | account settings and info |
 | hashed_pin | string | yes | no | hash of pin for main account user |
 | stripe_token | string | no | no | stripe auth token |
@@ -46,6 +46,7 @@
 | student_id | uuid | yes | yes | student id |
 | account_id | uuid | yes | no | foreign key for account |
 | username | string | yes | yes | student username |
+| hashed_pin | string | yes | no | hash of pin for student user |
 | [settings](#student.settings) | json | no | no | student profile/settings |
 | [records](#student.records) | json | no | no | student records/history |
 

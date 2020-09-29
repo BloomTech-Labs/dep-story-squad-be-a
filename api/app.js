@@ -12,10 +12,11 @@ const session = require('express-session');
 import authRequired from './middleware/authRequired';
 
 // Routers:
-import indexRouter from './routes/index';
-import profileRouter from './routes/profile';
 import accountRouter from './routes/account';
+import promptRouter from './routes/prompt';
 import readingRouter from './routes/reading';
+import storyRouter from './routes/story';
+import studentRouter from './routes/student';
 
 var app = express();
 
@@ -53,10 +54,11 @@ app.use(session({
 app.use(oidc.router);
 
 // application routes
-app.use('/', indexRouter);
-app.use(['/profile', '/profiles'], profileRouter);
 app.use('/account', authRequired, accountRouter);
+app.use('/prompt', authRequired, promptRouter);
 app.use('/reading', authRequired, readingRouter);
+app.use('/story', authRequired, storyRouter);
+app.use('/student', authRequired, studentRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

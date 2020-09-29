@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 
 const Account = require('../models/accountModel.js');
 
-router.get('/', (req, res)=>{
+router.get('/login', (req, res)=>{
   if (!req.jwt) {
       res.status(400).json({ message: 'No JWT; could not authorize.'});
   }
@@ -19,7 +19,13 @@ router.get('/', (req, res)=>{
   })
 })
 
-router.post('/', (req, res)=>{
+router.post('/login', (req, res)=>{
+    Account.findByEmail(req.jwt.claims.email)
+    .then(user => {
+        if (user) {
+            res.status(409).json({ message: 'User already in db.' })
+        }
+    })
     let userData = req.body;
     const rounds = process.env.HASH_ROUNDS || 12;
     const hash = bcrypt.hashSync(userData.pin, rounds);
@@ -30,6 +36,27 @@ router.post('/', (req, res)=>{
     })
     .catch (err => {
         res.status(500).json({ message: 'Failed to add user.' })
+    })
+})
+
+router.patch('/login', (req, res)=>{
+    Account.findByEmail(req.jwt.claims.email)
+    .then(user => {
+        if (!user) {
+            res.status(404).jason({ message: 'User not in db.' })
+        } else {
+            let userData = req.body;
+            const rounds = process.env.HASH_ROUNDS || 12;
+            const hash = bcrypt.hashSync(userData.pin, rounds);
+            userData.pin = hash;
+            if (user.hashed_pin != hash) {
+                res.status(401).json({ message: "PIN mismatch." });
+            }
+            Account.update(userData, userData.email)
+            .then(updated_user => {
+                res.status(200).json(updated_user)
+            })
+        }
     })
 })
 
