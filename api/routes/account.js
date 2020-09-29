@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const bcrypt = require('bcryptjs');
 
 const Account = require('../models/accountModel.js');
+const Hash_tools = require('../tools/hash_tools');
 
 router.get('/login', (req, res)=>{
   if (!req.jwt) {
@@ -9,13 +9,12 @@ router.get('/login', (req, res)=>{
   }
   Account.findByEmail(req.jwt.claims.email)
   .then(user => {
+      const hash = Hash_tools.hasher(req.body.pin);
       if (!user) {
           res.status(404).json({ message: 'Account not found.' })
-      } else if (bcrypt.compareSync(pin, user.hashed_pin)) {
-          res.status(200).json(user)
       } else {
-          res.status(401).json({ message: 'PIN mismatch.'})
-      }
+          res.status(200).json(user)
+      } 
   })
 })
 
@@ -26,11 +25,10 @@ router.post('/login', (req, res)=>{
             res.status(409).json({ message: 'User already in db.' })
         }
     })
-    let userData = req.body;
-    const rounds = process.env.HASH_ROUNDS || 12;
-    const hash = bcrypt.hashSync(userData.pin, rounds);
-    userData.pin = hash;
-    Account.add(userData)
+    let accountData = req.body;
+    const hash = Hash_tools.hasher(accountData.pin);
+    accountData.pin = hash;
+    Account.add(accountData)
     .then(user => {
         res.status(201).json(user);
     })
@@ -45,10 +43,9 @@ router.patch('/login', (req, res)=>{
         if (!user) {
             res.status(404).jason({ message: 'User not in db.' })
         } else {
-            let userData = req.body;
-            const rounds = process.env.HASH_ROUNDS || 12;
-            const hash = bcrypt.hashSync(userData.pin, rounds);
-            userData.pin = hash;
+            let accountData = req.body;
+            const hash = Hash_tools.hasher(accountData.pin);
+            accountData.pin = hash;
             if (user.hashed_pin != hash) {
                 res.status(401).json({ message: "PIN mismatch." });
             }

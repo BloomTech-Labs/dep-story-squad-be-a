@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const bcrypt = require('bcryptjs');
 
 const Student = require('../models/studentModel.js');
 const Account = require('../models/accountModel.js');
+const Hash_tools = require('../tools/hash_tools');
 
 router.get('/:student_id', (req, res) => {
     const { student_id } = req.params;
@@ -32,12 +32,11 @@ router.patch('/:student_id', (req, res) => {
             .then( account => {
                 if (account.email == req.jwt.claims.email) {
                     let studentData = req.body;
-                    const rounds = process.env.HASH_ROUNDS || 12;
-                    const hash = bcrypt.hashSync(studentData.pin, rounds);
-                    studentData.pin = hash;
+                    const hash = Hash_tools.hasher(studentData.pin);
                     if (student.hashed_pin != hash) {
                         res.status(401).json({ message: 'PIN mismatch.' });
                     } else {
+                        studentData.pin = hash;
                         Student.update(studentData, student_id)
                         .then(updated_student => {
                             res.status(200).json(updated_student);
@@ -60,8 +59,7 @@ router.post('/', (req, res)=>{
             res.status(409).json({ message: 'Username already taken.' })
         } else {
             let studentData = req.body;
-            const rounds = process.env.HASH_ROUNDS || 12;
-            const hash = bcrypt.hashSync(studentData.pin, rounds);
+            const hash = Hash_tools.hasher(studentData.pin);
             studentData.pin = hash;
             Student.add(studentData)
             .then(student => {

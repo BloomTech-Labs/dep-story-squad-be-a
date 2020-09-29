@@ -282,7 +282,8 @@ Request body:
         },
         "username": "optional",
         "settings": "optional -- whole JSON object",
-        "records": "optional -- whole JSON object"
+        "records": "optional -- whole JSON object",
+        "pin": "integer"
     }
 ```
 
