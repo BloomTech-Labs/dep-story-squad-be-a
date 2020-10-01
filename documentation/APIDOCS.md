@@ -18,6 +18,9 @@ Not yet deployed.
 | [/story](#POST/story) | POST | Adds new story to db. |
 | [/story/:story_id](GET/story/:story_id) | GET | Retrieves story with specified ID. |
 | [/story/:story_id](PATCH/story/:story_id) | PATCH | Updates story with specified ID. |
+| /s[tripe/card-wallet](#GET/stripe/card-wallet) | GET | Returns client_secret to update saved cards. |
+| [/stripe/payment](#POST/stripe/payment) | POST | Processes payment through Stripe |
+| [/stripe/subscribe](#POST/stripe/subscribe) | POST | Sets up new subscription |
 | [/student](#POST/student) | POST | Creates new student for logged-in account |
 | [/student/:student_id](#GET/student/:student_id) | GET | Retrieves student info |
 | [/student/:student_id](#PATCH/student/:student_id) | PATCH | Updates student info |
@@ -26,8 +29,14 @@ Not yet deployed.
 
 | URL                  | Request | Description                                              |
 |----------------------|---------|----------------------------------------------------------|
-| /ds_story/:story_id | GET | Retrieves story info. |
-| /ds_story/:story_id | PATCH | Updates story info. |
+| [/ds_story/:story_id](#GET/ds_story/:story_id) | GET | Retrieves story info. |
+| [/ds_story/:story_id](#PATCH/ds_story/:story_id) | PATCH | Updates story info. |
+
+## Webhook endpoints for Stripe
+
+| URL                  | Request | Description                                              |
+|----------------------|---------|----------------------------------------------------------|
+| [/stripe/webhook](#POST/stripe/webhook) | POST | Accepts payment notification and updates paid_until |
 
 ## Requests and Returns:
 
@@ -155,7 +164,19 @@ Request body:
     }
 ```
 
-### <a name="GET/prompt/:prompt_id></a>GET /api/prompt/:prompt_id
+Returns:
+```json
+    {
+        "story_id": "uuid",
+        "student_id": "uuid",
+        "prompt_id": "uuid",
+        "s3_url": "string",
+        "s3_key": "string",
+        "about": "JSON object"
+    }
+```
+
+### <a name="GET/prompt/:prompt_id"></a>GET /api/prompt/:prompt_id
 Request body:
 ```json
     {
@@ -241,7 +262,7 @@ Request body:
 | 400 | Student ID not received. |
 | 500 | Server error. |
 
-### <a name="GET/story/:story_id></a>GET /api/story/:story_id
+### <a name="GET/story/:story_id"></a>GET /api/story/:story_id
 Request body:
 ```json
     {
@@ -257,7 +278,7 @@ Request body:
 | 404 | Story not found. |
 | 500 | Server error. |
 
-### <a name="PATCH/story/:story_id></a>PATCH /api/story/:story_id
+### <a name="PATCH/story/:story_id"></a>PATCH /api/story/:story_id
 Request body:
 ```json
     {
@@ -279,6 +300,86 @@ Request body:
 | 404 | Story not found. |
 | 410 | Authoring student no longer active. |
 | 500 | Server error. |
+
+### <a name="GET/stripe/card-wallet"></a>GET /api/stripe/card-wallet
+Request body:
+```json
+    {
+        "headers": {
+            "Authorization": "token(string)"
+        },
+        "customer_id": "Stripe customer ID"
+    }
+```
+
+Response:
+```json
+    {
+        "client_secret": "client secret for Stripe wallet/intent"
+    }
+```
+
+### <a name="POST/stripe/payment"></a>POST /api/stripe/payment
+Request body:
+```json
+    {
+        "headers": {
+            "Authorization": "token(string)"
+        },
+        "success_url": "redirect URL on success",
+        "cancel_url": "redirect URL on cancel"
+    }
+```
+
+Response:
+```json
+    {
+        "id": "session ID for payment"
+    }
+```
+
+### <a name="POST/stripe/subscribe"></a>POST /api/stripe/subscribe
+Request body:
+```json
+    {
+        "headers": {
+            "Authorization": "token(string)"
+        },
+        "success_url": "redirect URL on success",
+        "cancel_url": "redirect URL on cancel"
+    }
+```
+
+Response:
+```json
+    {
+        "id": "session ID for payment"
+    }
+```
+
+### <a name="POST/stripe/webhook"></a>POST /api/stripe/webhook
+Request body:
+```json
+    {
+        "headers": {
+            "stripe-signature":"string"
+        },
+        "body": "other Stripe-defined contents"
+    }
+```
+
+Response:
+```json
+    {
+        "status": 200
+    }
+```
+
+Side effects:
+
+```
+account.paid_until updated
+```
 
 ### <a name="POST/student"></a>POST /api/student
 Request body:
