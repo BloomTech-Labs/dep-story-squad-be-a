@@ -39,11 +39,11 @@ router.patch('/:story_id', (req, res) => {
                     Story.update(req.body, story_id)
                     .then(updated_story => {
                         res.status(200).json(updated_story);
-                    })
-                })
-        })
-    })
-})
+                    });
+                });
+        });
+    });
+});
 
 router.post('/', (req, res) => {
     if (!req.body.student_id) {
@@ -57,3 +57,5 @@ router.post('/', (req, res) => {
         res.status(500).json({ message: 'Failed to add story.', error: err });
     });
 });
+
+module.exports = router

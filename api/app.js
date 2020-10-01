@@ -10,9 +10,11 @@ const session = require('express-session');
 
 // Middleware:
 import authRequired from './middleware/authRequired';
+import ds_secret from './middleware/ds_secret.js';
 
 // Routers:
 import accountRouter from './routes/account';
+import ds_story from './routes/ds_story';
 import promptRouter from './routes/prompt';
 import readingRouter from './routes/reading';
 import storyRouter from './routes/story';
@@ -55,6 +57,7 @@ app.use(oidc.router);
 
 // application routes
 app.use('/account', authRequired, accountRouter);
+app.use('/ds_story', ds_secret, ds_story);
 app.use('/prompt', authRequired, promptRouter);
 app.use('/reading', authRequired, readingRouter);
 app.use('/story', authRequired, storyRouter);

@@ -22,6 +22,12 @@ Not yet deployed.
 | [/student/:student_id](#GET/student/:student_id) | GET | Retrieves student info |
 | [/student/:student_id](#PATCH/student/:student_id) | PATCH | Updates student info |
 
+## Endpoints requiring DS secret
+
+| URL                  | Request | Description                                              |
+|----------------------|---------|----------------------------------------------------------|
+| /ds_story/:story_id | GET | Retrieves story info. |
+| /ds_story/:story_id | PATCH | Updates story info. |
 
 ## Requests and Returns:
 
@@ -113,6 +119,41 @@ Returns:
 | 401 | PIN mismatch |
 | 404 | User not in db |
 | 500 | Failed to update user |
+
+### <a name="GET/ds_story/:story_id"></a>GET /api/ds_story/:story_id
+Request body:
+```json
+    {
+        "headers": {
+            "Authorization": "secret (string)"
+        }
+    }
+```
+
+Returns:
+```json
+    {
+        "story_id": "uuid",
+        "student_id": "uuid",
+        "prompt_id": "uuid",
+        "s3_url": "string",
+        "s3_key": "string",
+        "about": "JSON object"
+    }
+```
+
+### <a name="PATCH/ds_story/:story_id"></a>PATCH /api/ds_story/:story_id
+Request body:
+```json
+    {
+        "headers": {
+            "Authorization": "secret (string)"
+        },
+        "s3_url": "string (optional)",
+        "s3_key": "string (optional)",
+        "about": "JSON object (optional)"
+    }
+```
 
 ### <a name="GET/prompt/:prompt_id></a>GET /api/prompt/:prompt_id
 Request body:

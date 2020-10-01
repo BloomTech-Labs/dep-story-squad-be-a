@@ -1,8 +1,12 @@
 const router = require('express').Router();
+const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
 
 const Account = require('../models/accountModel.js');
 const Hash_tools = require('../tools/hash_tools');
 
+/* Returns info for logged-in account (requires token).
+    TODO: choose which info is sent
+        (e.g. no hashed_pin, restricted Stripe info) */
 router.get('/login', (req, res)=>{
   if (!req.jwt) {
       res.status(400).json({ message: 'No JWT; could not authorize.'});
@@ -18,6 +22,8 @@ router.get('/login', (req, res)=>{
   })
 })
 
+/* Adds new account to DB (based on token)
+    requires req.body.pin */
 router.post('/login', (req, res)=>{
     Account.findByEmail(req.jwt.claims.email)
     .then(user => {
@@ -28,6 +34,10 @@ router.post('/login', (req, res)=>{
     let accountData = req.body;
     const hash = Hash_tools.hasher(accountData.pin);
     accountData.pin = hash;
+    const customer = await stripe.customers.create({
+        description: 'Stripe customer object',
+      });
+    accountData.stripe = customer;
     Account.add(accountData)
     .then(user => {
         res.status(201).json(user);
