@@ -15,13 +15,13 @@
 | Name | Type | Required | Unique | Notes |
 |------|------|----------|--------|-------|
 | account_id | uuid | yes | yes | account id (auto-generated) |
-| okta_id | uuid | yes | yes | Okta uuid (from token) |
 | email | string | yes | yes | email linked to account |
 | username | string | yes | yes | account username for display |
 | student_ids | text array | no | no | array of student ids linked to account |
-| [settings](#account.settings) | json | yes | no | account settings and info |
 | hashed_pin | string | yes | no | hash of pin for main account user |
-| stripe_token | string | no | no | stripe auth token |
+| [settings](#account.settings) | json | yes | no | account settings and info |
+| stripe | JSON object | no | no | stripe info |
+| paid_until | datetime | no | no | updates when back end receives payment notice from Stripe |
 
 ## <a name="Prompt"></a>Prompt
 | Name | Type | Required | Unique | Notes |

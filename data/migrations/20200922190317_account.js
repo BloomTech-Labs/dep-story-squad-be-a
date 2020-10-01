@@ -19,8 +19,10 @@ exports.up = function(knex) {
         .notNullable();
       tbl.json('settings')
         .defaultTo({});
-      tbl.string('stripe_token')
-        .defaultTo('');
+      tbl.json('stripe')
+        .defaultTo({});
+      tbl.datetime('paid_until')
+        .defaultTo(knex.fn.now(6));
     })
 };
 

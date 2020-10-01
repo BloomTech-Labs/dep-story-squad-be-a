@@ -10,12 +10,15 @@ const session = require('express-session');
 
 // Middleware:
 import authRequired from './middleware/authRequired';
+import ds_secret from './middleware/ds_secret.js';
 
 // Routers:
 import accountRouter from './routes/account';
+import ds_story from './routes/ds_story';
 import promptRouter from './routes/prompt';
 import readingRouter from './routes/reading';
 import storyRouter from './routes/story';
+import stripeRouter from './routes/stripe';
 import studentRouter from './routes/student';
 
 var app = express();
@@ -55,9 +58,11 @@ app.use(oidc.router);
 
 // application routes
 app.use('/account', authRequired, accountRouter);
+app.use('/ds_story', ds_secret, ds_story);
 app.use('/prompt', authRequired, promptRouter);
 app.use('/reading', authRequired, readingRouter);
 app.use('/story', authRequired, storyRouter);
+app.use('/stripe', stripeRouter);
 app.use('/student', authRequired, studentRouter);
 
 // catch 404 and forward to error handler
