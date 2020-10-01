@@ -47,6 +47,8 @@ router.post('/login', (req, res)=>{
     })
 })
 
+// TODO: paid_until should not be updateable through this endpoint.
+// paid_until will update when BE receives payment notification from Stripe
 router.patch('/login', (req, res)=>{
     Account.findByEmail(req.jwt.claims.email)
     .then(user => {

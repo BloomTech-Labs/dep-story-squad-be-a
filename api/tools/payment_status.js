@@ -19,9 +19,12 @@ module.exports = {
     markPaid
 }
 
+
+// TODO: allow payment for more than 1 month in advance;
+// (will depend on data delivered by Stripe in webhook)
 function markPaid(email) {
     const rightnow = new Date();
     const paid_until = new Date();
     paid_until.setDate(rightnow.getDate() + monthDays[rightnow.getMonth()]);
-    Account.update({ paid_until: paid_until.toISOString()});
+    Account.update({ paid_until: paid_until.toISOString()}, email);
 }

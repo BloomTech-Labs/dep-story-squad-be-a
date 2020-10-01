@@ -69,6 +69,7 @@ router.post('/subscribe', authRequired, async (req, res) => {
     res.json({ id: session.id });
 });
 
+// TODO: parse req to determine how far ahead account has paid
 router.post('/webhook', bodyParser.raw({type: 'application/json'}), (req, res) => {
     const payload = req.body;
     const sig = req.headers['stripe-signature'];
