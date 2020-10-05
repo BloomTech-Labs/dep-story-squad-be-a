@@ -24,7 +24,7 @@ router.get('/login', (req, res)=>{
 
 /* Adds new account to DB (based on token)
     requires req.body.pin */
-router.post('/login', (req, res)=>{
+router.post('/login', async (req, res)=>{
     Account.findByEmail(req.jwt.claims.email)
     .then(user => {
         if (user) {
@@ -53,9 +53,12 @@ router.patch('/login', (req, res)=>{
     Account.findByEmail(req.jwt.claims.email)
     .then(user => {
         if (!user) {
-            res.status(404).jason({ message: 'User not in db.' })
+            res.status(404).json({ message: 'User not in db.' })
         } else {
             let accountData = req.body;
+            if (accountData.paid_until) {
+                res.status(403).json({ message: 'Payment horizon should only update when payment confirmation is received from Stripe.' });
+            }
             const hash = Hash_tools.hasher(accountData.pin);
             accountData.pin = hash;
             if (user.hashed_pin != hash) {
