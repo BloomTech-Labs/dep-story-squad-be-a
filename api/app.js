@@ -57,13 +57,17 @@ app.use(session({
 app.use(oidc.router);
 
 // application routes
-app.use('/account', authRequired, accountRouter);
-app.use('/ds_story', ds_secret, ds_story);
-app.use('/prompt', authRequired, promptRouter);
-app.use('/reading', authRequired, readingRouter);
-app.use('/story', authRequired, storyRouter);
-app.use('/stripe', stripeRouter);
-app.use('/student', authRequired, studentRouter);
+app.use('/api/account', authRequired, accountRouter);
+app.use('/api/ds_story', ds_secret, ds_story);
+app.use('/api/prompt', authRequired, promptRouter);
+app.use('/api/reading', authRequired, readingRouter);
+app.use('/api/story', authRequired, storyRouter);
+app.use('/api/stripe', stripeRouter);
+app.use('/api/student', authRequired, studentRouter);
+
+app.get('/', (req, res) => {
+  res.status(200).json({ api: "up" });
+})
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
