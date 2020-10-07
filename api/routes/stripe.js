@@ -9,7 +9,7 @@ const authRequired = require('../middleware/authRequired');
 // Get endpointSecret from Stripe Dashboard
 const endpointSecret = process.env.ENDPOINT_SECRET || 'whsec_...';
 
-router.get('/card-wallet', authRequired, async(req, res) => {
+router.get('/card-wallet', authRequired, async (req, res) => {
     const intent = await stripe.setupIntents.create({
         customer: req.body.customer_id
     });
@@ -88,7 +88,9 @@ router.post('/webhook', bodyParser.raw({type: 'application/json'}), (req, res) =
         }
     }
     response.status(200);
-})
+});
+
+module.exports = router;
 
 // Retrieve payment methods:
 // const paymentMethods = await stripe.paymentMethods.list({
@@ -112,5 +114,3 @@ router.post('/webhook', bodyParser.raw({type: 'application/json'}), (req, res) =
 //     const paymentIntentRetrieved = await stripe.paymentIntents.retrieve(err.raw.payment_intent.id);
 //     console.log('PI retrieved: ', paymentIntentRetrieved.id);
 //   }
-
-module.exports = router
