@@ -11,6 +11,12 @@ module.exports = {
       min: 2,
       max: 10,
     },
+    connection: {
+      host: 'localhost',
+      database: 'storysquad-dev',
+      user: process.env.PG_USERNAME,
+      password: process.env.PG_PASSWORD
+    },
   },
 
   test: {
