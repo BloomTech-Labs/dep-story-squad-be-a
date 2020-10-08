@@ -1,17 +1,13 @@
-import createError from 'http-errors';
+const ds_admin_secret =
+  process.env.DS_ADMIN_SECRET || 'xD5w6CTfQSh6qs4xviIV6viQomie3ePjQQeDQjsr';
 
-const ds_admin_secret = process.env.DS_ADMIN_SECRET || 'xD5w6CTfQSh6qs4xviIV6viQomie3ePjQQeDQjsr';
-
-const dsAdmin = async (req, res, next) => {
-    try {
-        if (req.headers.authorization == ds_admin_secret) {
-            next();
-        } else {
-            throw new Error('Admin authorization failed.');
-        }
-    } catch (err) {
-        next(createError(401, err.message));
-    }
+const dsAdmin = (req, res, next) => {
+  if (req.headers.authorization == ds_admin_secret) {
+    next();
+  } else {
+    res.status(401).json({ message: 'Could not match DS admin secret.' });
+  }
 };
 
-export default dsAdmin;
+// export default dsAdmin;
+module.exports = dsAdmin;
