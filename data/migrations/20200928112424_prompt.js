@@ -8,7 +8,7 @@ exports.up = function(knex) {
             .unique()
             .primary()
             .defaultTo(knex.raw('uuid_generate_v4()'));
-        tbl.uuid('reading_id')
+        tbl.integer('reading_id')
             .notNullable()
             .references('reading_id')
             .inTable('reading')
