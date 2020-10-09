@@ -3,7 +3,7 @@
 
 ## Base URL for Deployed API
 
-Not yet deployed.
+https://story-squad-dev.herokuapp.com/api
 
 ## Endpoints that require Okta token
 
