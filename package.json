@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./api/bin/server.js",
+    "build": "node ./api/bin/server.js",
     "tests": "npx jest --forceExit",
     "watch:dev": "nodemon",
     "knex": "npx knex --knexfile config/knexfile.js"
