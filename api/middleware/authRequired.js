@@ -6,6 +6,8 @@ const OktaJwtVerifier = require('@okta/jwt-verifier');
 
 const expectedAudience = 'api://default';
 const oktaJwtVerifier = new OktaJwtVerifier({
+  // Okta environment variables set manually
+  // (only for testing!)
   issuer: `${process.env.OKTA_URL_ISSUER}`,
   clientId: `${process.env.OKTA_CLIENT_ID}`,
   assertClaims: {
