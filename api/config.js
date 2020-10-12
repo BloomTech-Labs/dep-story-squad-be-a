@@ -1,4 +1,6 @@
 // import dotenv from 'dotenv';
+require('core-js/stable');
+require('regenerator-runtime/runtime');
 const dotenv = require('dotenv');
 const config_result = dotenv.config();
 console.log('config_result', config_result);
