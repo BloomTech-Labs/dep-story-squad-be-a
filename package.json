@@ -6,10 +6,7 @@
     "start": "node ./api/bin/server.js",
     "tests": "npx jest --forceExit",
     "watch:dev": "nodemon",
-    "knex": "npx knex --knexfile config/knexfile.js",
-    "transpile": "npx babel ./api --out-dir dist-api",
-    "clean": "rm -rf dist-api",
-    "build": "npx npm-run-all clean transpile"
+    "knex": "npx knex --knexfile config/knexfile.js"
   },
   "babel": {
     "presets": [
