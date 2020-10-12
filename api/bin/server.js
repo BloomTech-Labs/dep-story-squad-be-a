@@ -2,7 +2,7 @@
 // import app from '../app';
 
 require = require('esm')(module/*, options*/);
-require('dotenv').config();
+require('dotenv').config({ path: '../../.env' });
 
 require('../config');
 const app = require('../app');
