@@ -4,7 +4,7 @@
 require = require('esm')(module/*, options*/);
 require('dotenv').config();
 
-const config = require('../config');
+require('../config');
 const app = require('../app');
 
 const port = process.env.PORT || 8000;

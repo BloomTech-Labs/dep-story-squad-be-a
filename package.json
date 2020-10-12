@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node ./dist-api/bin/server.js",
+    "start": "node ./api/bin/server.js",
     "tests": "npx jest --forceExit",
     "watch:dev": "nodemon",
     "knex": "npx knex --knexfile config/knexfile.js",
@@ -53,6 +53,7 @@
     "@okta/oidc-middleware": "^4.0.1",
     "apidoc": "^0.23.0",
     "apidoc-markdown": "^5.1.4",
+    "babel": "^6.23.0",
     "babel-preset-es2015": "^6.24.1",
     "cookie-parser": "~1.4.4",
     "core-js": "^3.6.5",
