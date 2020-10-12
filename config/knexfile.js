@@ -1,5 +1,5 @@
-var dotenv = require('dotenv');
-dotenv.config({ path: '../.env' });
+// var dotenv = require('dotenv');
+// dotenv.config();
 
 module.exports = {
   development: {
