@@ -1,6 +1,6 @@
 // import dotenv from 'dotenv';
-// const dotenv = require('dotenv');
-const config_result = require('dotenv').config();
+const dotenv = require('dotenv');
+const config_result = dotenv.config();
 console.log('config_result', config_result);
 if (config_result.error) {
   throw config_result.error;
