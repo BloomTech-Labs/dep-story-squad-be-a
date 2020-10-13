@@ -15,8 +15,8 @@ router.get('/:reading_id', (req, res) => {
     })
     .catch(err => {
         res.status(500).json({ message: 'Failed to retrieve reading.' })
-    })
-})
+    });
+});
 
 router.get('/:reading_id/prompts', (req, res) => {
     const { reading_id } = req.params;
@@ -28,6 +28,9 @@ router.get('/:reading_id/prompts', (req, res) => {
             res.status(200).json(prompts);
         }
     })
-})
+    .catch(err => {
+        res.status(500).json({ message: 'Error retrieving prompts by reading_id parameter.', error: err });
+    });
+});
 
 module.exports = router
