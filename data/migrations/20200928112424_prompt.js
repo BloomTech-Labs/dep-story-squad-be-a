@@ -20,5 +20,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTableIfExists('student');
+  return knex.schema.dropTableIfExists('prompt');
 };
