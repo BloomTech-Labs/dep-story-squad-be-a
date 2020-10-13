@@ -39,9 +39,21 @@ router.patch('/:story_id', (req, res) => {
                     Story.update(req.body, story_id)
                     .then(updated_story => {
                         res.status(200).json(updated_story);
+                    })
+                    .catch(err => {
+                        res.status(500).json({ message: 'Error updating story.', error: err });
                     });
+                })
+                .catch(err => {
+                    res.status(500).json({ message: 'Error retrieving user info for story author account.', error: err });
                 });
+        })
+        .catch(err => {
+            res.status(500).json({ message: 'Error retrieving info for story author (student).', error: err });
         });
+    })
+    .catch(err => {
+        res.status(500).json({ message: 'Error retrieving story by ID parameter.', error: err });
     });
 });
 

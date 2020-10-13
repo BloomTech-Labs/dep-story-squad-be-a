@@ -17,9 +17,15 @@ router.get('/:student_id', (req, res) => {
                     res.status(401).json({ message: 'Account email for student does not match logged-in email.'});
                 }
             })
+            .catch(err => {
+                res.status(500).json({ message: 'Error retrieving info for found student.', error: err });
+            })
         } else {
             res.status(404).json({ message: 'Could not find student with given id.'});
         }
+    })
+    .catch(err => {
+        res.status(500).json({ message: 'Error retrieving student info for ID param.', error: err });
     })
 });
 
@@ -45,10 +51,16 @@ router.patch('/:student_id', (req, res) => {
                 } else {
                     res.status(401).json({ message: 'Account email for student does not match logged-in email.'});
                 }
+            })
+            .catch( err => {
+                res.status(500).json({ message: 'Error retrieving account for student.', error: err })
             });
         } else {
             res.status(404).json({ message: 'Could not find student with given id.'});
         }
+    })
+    .catch( err => {
+        res.status(500).json({ message: 'Error retrieving student info for ID parameter.', error: err });
     });
 });
 
@@ -75,11 +87,17 @@ router.post('/', (req, res)=>{
                         res.status(500).json({ message: 'Failed to update account list of student IDs.'});
                     })
                 })
+                .catch (err => {
+                    res.status(500).json({ message: 'Error retrieving account for student.', error: err })
+                });
             })
             .catch (err => {
                 res.status(500).json({ message: 'Failed to add student', error: err });
             });
         }
+    })
+    .catch(err => {
+        res.status(500).json({ message: 'Error retrieving student by req.body.username.', error: err });
     });
 });
 

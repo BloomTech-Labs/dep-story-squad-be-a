@@ -20,6 +20,9 @@ router.get('/login', (req, res)=>{
           res.status(200).json(user)
       } 
   })
+  .catch(err => {
+      res.status(500).json({ message: 'Error searching for account by req.jwt.claims.email.', error: err });
+  })
 })
 
 /* Adds new account to DB (based on token)
@@ -29,22 +32,26 @@ router.post('/login', async (req, res)=>{
     .then(user => {
         if (user) {
             res.status(409).json({ message: 'User already in db.' })
+        } else {
+            let accountData = req.body;
+            const hash = Hash_tools.hasher(accountData.pin);
+            accountData.pin = hash;
+            const customer = await stripe.customers.create({
+                description: 'Stripe customer object',
+              });
+            accountData.stripe = customer;
+            Account.add(accountData)
+            .then(user => {
+                res.status(201).json(user);
+            })
+            .catch (err => {
+                res.status(500).json({ message: 'Failed to add user.' })
+            })
         }
     })
-    let accountData = req.body;
-    const hash = Hash_tools.hasher(accountData.pin);
-    accountData.pin = hash;
-    const customer = await stripe.customers.create({
-        description: 'Stripe customer object',
-      });
-    accountData.stripe = customer;
-    Account.add(accountData)
-    .then(user => {
-        res.status(201).json(user);
-    })
-    .catch (err => {
-        res.status(500).json({ message: 'Failed to add user.' })
-    })
+    .catch(err => {
+        res.status(500).json({ message: 'Error checking for existing account by req.jwt.claims.email.', error: err })
+    });
 })
 
 // TODO: paid_until should not be updateable through this endpoint.
@@ -69,6 +76,9 @@ router.patch('/login', (req, res)=>{
                 res.status(200).json(updated_user)
             })
         }
+    })
+    .catch(err => {
+        res.status(500).json({ message: 'Error searching for account by req.jwt.claims.email.', error: err });
     })
 })
 
