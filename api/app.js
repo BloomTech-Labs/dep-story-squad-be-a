@@ -5,7 +5,7 @@
 // import logger from 'morgan';
 // import helmet from 'helmet';
 
-const { createError } = require('http-errors');
+// const { createError } = require('http-errors');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -91,31 +91,31 @@ app.get('/', (req, res) => {
   res.status(200).json({ api: "up" });
 });
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(new createError.NotFound(`Route '${req.url}' Not Found.`));
-});
+// // catch 404 and forward to error handler
+// app.use(function (req, res, next) {
+//   next(new createError.NotFound(`Route '${req.url}' Not Found.`));
+// });
 
 // error handler
-app.use(function (err, req, res, next) {
-  if (createError.isHttpError(err)) {
-    res.locals.message = err.message;
-    res.locals.status = err.statusCode;
-    if (process.env.NODE_ENV === 'development') {
-      res.locals.error = err;
-    }
-  }
+// app.use(function (err, req, res, next) {
+//   if (createError.isHttpError(err)) {
+//     res.locals.message = err.message;
+//     res.locals.status = err.statusCode;
+//     if (process.env.NODE_ENV === 'development') {
+//       res.locals.error = err;
+//     }
+//   }
   
-  if (process.env.NODE_ENV === 'production' && !res.locals.message) {
-    res.locals.message = 'ApplicationError';
-    res.locals.status = 500;
-  }
-  if (res.locals.status) {
-    res.status(res.locals.status || 500);
-    const errObject = { error: res.locals.error, message: res.locals.message };
-    return res.json(errObject);
-  }
-  next(err);
-});
+//   if (process.env.NODE_ENV === 'production' && !res.locals.message) {
+//     res.locals.message = 'ApplicationError';
+//     res.locals.status = 500;
+//   }
+//   if (res.locals.status) {
+//     res.status(res.locals.status || 500);
+//     const errObject = { error: res.locals.error, message: res.locals.message };
+//     return res.json(errObject);
+//   }
+//   next(err);
+// });
 
 module.exports = app;
