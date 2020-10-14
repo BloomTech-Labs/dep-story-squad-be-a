@@ -51,6 +51,7 @@ const authRequired = async (req, res, next) => {
     .catch( err => {
       // res.status(500).json({ message: "Okta JWT validation failed.", error: err });
       if (err.parsedBody.email) {
+        req.jwt = {};
         req.jwt.claims = err.parsedBody;
         next();
       } else {
