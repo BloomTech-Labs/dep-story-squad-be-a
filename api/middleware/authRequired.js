@@ -1,7 +1,7 @@
 // import createError from 'http-errors';
 // import OktaJwtVerifier from '@okta/jwt-verifier';
 
-const { createError } = require('http-errors');
+// const { createError } = require('http-errors');
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 
 const expectedAudience = 'api://default';
@@ -38,7 +38,9 @@ const authRequired = async (req, res, next) => {
     const authHeader = req.headers.authorization || '';
     const match = authHeader.match(/Bearer (.+)/);
 
-    if (!match) throw new Error('Please Login to access this resource!!');
+    if (!match) {
+      res.status(401).json({ message: 'Token mismatch in Okta middleware.' });
+    }
 
     const accessToken = match[1];
     oktaJwtVerifier.verifyAccessToken(accessToken, expectedAudience)
@@ -50,7 +52,7 @@ const authRequired = async (req, res, next) => {
     })
     next();
   } catch (err) {
-    next(createError(401, err.message));
+    res.status(500).json({ message: 'Error caught in Okta middleware.', error: err });
   }
 };
 
