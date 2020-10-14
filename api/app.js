@@ -16,8 +16,6 @@ const { ExpressOIDC } = require('@okta/oidc-middleware');
 const session = require('express-session');
 
 // Middleware:
-// import authRequired from './middleware/authRequired';
-// import ds_secret from './middleware/ds_secret.js';
 const authRequired = require('./middleware/authRequired');
 const ds_secret = require('./middleware/ds_secret');
 
@@ -41,6 +39,11 @@ var app = express();
 
 app.use('/apidoc', express.static('../apidoc'));
 app.use(helmet());
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+})
 app.use(
   cors({
     origin: '*',
