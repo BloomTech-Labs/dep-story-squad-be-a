@@ -1,7 +1,6 @@
-# Basic node API
+# Story Squad back end and API
 
-> **Disclaimer:** This application is currently in Alpha and is not ready for
-> production. Please use at your own risk as things will change almost daily.
+> **Disclaimer:** This is not a production version yet.
 
 ## Requirements
 
@@ -15,7 +14,9 @@ All routes can be viewed in the [/documentation/APIDOCS.md](./documentation/APID
 
 Table info can be viewed in the [/documentation/DBDOCS.md](./documentation/DBDOCS.md) file
 
-## Getting Started
+## Getting Started -- DEPRECATED
+
+- These setup steps were included in the project scaffold, but should no longer be necessary.
 
 - Install [docker](https://docs.docker.com/get-docker/) for your platform
 - Fork and clone the repo to install it as your own remote.
@@ -42,6 +43,8 @@ Table info can be viewed in the [/documentation/DBDOCS.md](./documentation/DBDOC
 >`NODE_ENV="testing"`<br>
 >`BASE_URL="https://localhost:8000"`<br>
 >`SESSION_SECRET="another secret"`
+
+Okta, PostgreSQL, etc. environment variables should not be included in this readme or repo.
 
 ## Contributing
 

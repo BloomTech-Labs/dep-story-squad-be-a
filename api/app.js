@@ -80,9 +80,13 @@ app.use('/api/story', authRequired, storyRouter);
 app.use('/api/stripe', stripeRouter);
 app.use('/api/student', authRequired, studentRouter);
 
+app.get('/api', (req, res) => {
+  res.status(200).json({ api: "up" });
+});
+
 app.get('/', (req, res) => {
   res.status(200).json({ api: "up" });
-})
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
