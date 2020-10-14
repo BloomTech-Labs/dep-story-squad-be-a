@@ -24,8 +24,8 @@ router.get('/login', (req, res) => {
       res
         .status(500)
         .json({
-          message: 'Error searching for account by req.jwt.claims.email.',
-          error: err,
+          message: `Error searching for account by req.jwt.claims.email == ${req.jwt.claims.email}.`,
+          error: err
         });
     });
 });
