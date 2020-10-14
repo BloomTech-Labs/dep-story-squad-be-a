@@ -46,11 +46,11 @@ const authRequired = async (req, res, next) => {
     oktaJwtVerifier.verifyAccessToken(accessToken, expectedAudience)
     .then( jwt => {
       req.jwt = jwt;
+      next();
     })
     .catch( err => {
       res.status(500).json({ message: "Okta JWT validation failed." });
-    })
-    next();
+    });
   } catch (err) {
     res.status(500).json({ message: 'Error caught in Okta middleware.', error: err });
   }
