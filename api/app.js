@@ -28,6 +28,7 @@ const ds_secret = require('./middleware/ds_secret');
 // import stripeRouter from './routes/stripe';
 // import studentRouter from './routes/student';
 const accountRouter = require('./routes/account');
+const adminAccount = require('./routes/admin_account');
 const ds_story = require('./routes/ds_story');
 const promptRouter = require('./routes/prompt');
 const readingRouter = require('./routes/reading');
@@ -76,6 +77,7 @@ app.use(oidc.router);
 
 // application routes
 app.use('/api/account', authRequired, accountRouter);
+app.use('/api/admin_account', ds_secret, adminAccount);
 app.use('/api/ds_story', ds_secret, ds_story);
 app.use('/api/prompt', authRequired, promptRouter);
 app.use('/api/reading', authRequired, readingRouter);

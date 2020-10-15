@@ -10,24 +10,22 @@ const Hash_tools = require('../tools/hash_tools');
 router.get('/login', (req, res) => {
   if (!req.jwt) {
     res.status(400).json({ message: 'No JWT; could not authorize.' });
-  }
-  Account.findByEmail(req.jwt.claims.email)
-    .then((user) => {
-      const hash = Hash_tools.hasher(req.body.pin);
-      if (!user) {
-        res.status(404).json({ message: 'Account not found.' });
-      } else {
-        res.status(200).json(user);
-      }
-    })
-    .catch((err) => {
-      res
-        .status(500)
-        .json({
+  } else {
+    Account.findByEmail(req.jwt.claims.email)
+      .then((user) => {
+        if (!user) {
+          res.status(404).json({ message: 'Account not found.' });
+        } else {
+          res.status(200).json(user);
+        }
+      })
+      .catch((err) => {
+        res.status(500).json({
           message: `Error searching for account by req.jwt.claims.email == ${req.jwt.claims.email}.`,
-          error: err
+          error: err,
         });
-    });
+      });
+  }
 });
 
 /* Adds new account to DB (based on token)
@@ -58,8 +56,13 @@ router.post('/login', (req, res) => {
                 res.status(500).json({ message: 'Failed to add user.' });
               });
           })
-          .catch(err => {
-              res.status(500).json({ message: 'Error creating Stripe customer object.', error: err });
+          .catch((err) => {
+            res
+              .status(500)
+              .json({
+                message: 'Error creating Stripe customer object.',
+                error: err,
+              });
           });
         // accountData.stripe = customer;
         // Account.add(accountData)
@@ -72,13 +75,10 @@ router.post('/login', (req, res) => {
       }
     })
     .catch((err) => {
-      res
-        .status(500)
-        .json({
-          message:
-            'Error checking for existing account by req.jwt.claims.email.',
-          error: err,
-        });
+      res.status(500).json({
+        message: 'Error checking for existing account by req.jwt.claims.email.',
+        error: err,
+      });
     });
 });
 
@@ -92,12 +92,10 @@ router.patch('/login', (req, res) => {
       } else {
         let accountData = req.body;
         if (accountData.paid_until) {
-          res
-            .status(403)
-            .json({
-              message:
-                'Payment horizon should only update when payment confirmation is received from Stripe.',
-            });
+          res.status(403).json({
+            message:
+              'Payment horizon should only update when payment confirmation is received from Stripe.',
+          });
         }
         const hash = Hash_tools.hasher(accountData.pin);
         accountData.pin = hash;
@@ -110,12 +108,10 @@ router.patch('/login', (req, res) => {
       }
     })
     .catch((err) => {
-      res
-        .status(500)
-        .json({
-          message: 'Error searching for account by req.jwt.claims.email.',
-          error: err,
-        });
+      res.status(500).json({
+        message: 'Error searching for account by req.jwt.claims.email.',
+        error: err,
+      });
     });
 });
 
