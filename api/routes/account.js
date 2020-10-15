@@ -11,7 +11,8 @@ router.get('/login', (req, res) => {
   if (!req.jwt) {
     res.status(400).json({ message: 'No JWT; could not authorize.' });
   } else {
-    Account.findByEmail(req.jwt.claims.email)
+    const email = req.jwt.claims.email;
+    Account.findByEmail(email)
       .then((user) => {
         if (!user) {
           res.status(404).json({ message: 'Account not found.' });
@@ -21,7 +22,7 @@ router.get('/login', (req, res) => {
       })
       .catch((err) => {
         res.status(500).json({
-          message: `Error searching for account by req.jwt.claims.email == ${req.jwt.claims.email}.`,
+          message: `Error searching for account by req.jwt.claims.email == ${email}.`,
           error: err,
         });
       });
@@ -31,7 +32,8 @@ router.get('/login', (req, res) => {
 /* Adds new account to DB (based on token)
     requires req.body.pin */
 router.post('/login', (req, res) => {
-  Account.findByEmail(req.jwt.claims.email)
+  const email = req.jwt.claims.email;
+  Account.findByEmail(email)
     .then((user) => {
       if (user) {
         res.status(409).json({ message: 'User already in db.' });
@@ -39,9 +41,6 @@ router.post('/login', (req, res) => {
         let accountData = req.body;
         const hash = Hash_tools.hasher(accountData.pin);
         accountData.pin = hash;
-        // const customer = await stripe.customers.create({
-        //     description: 'Stripe customer object',
-        //   });
         stripe.customers
           .create({
             description: 'Stripe customer object',
@@ -57,21 +56,11 @@ router.post('/login', (req, res) => {
               });
           })
           .catch((err) => {
-            res
-              .status(500)
-              .json({
-                message: 'Error creating Stripe customer object.',
-                error: err,
-              });
+            res.status(500).json({
+              message: 'Error creating Stripe customer object.',
+              error: err,
+            });
           });
-        // accountData.stripe = customer;
-        // Account.add(accountData)
-        // .then(user => {
-        //     res.status(201).json(user);
-        // })
-        // .catch (err => {
-        //     res.status(500).json({ message: 'Failed to add user.' })
-        // })
       }
     })
     .catch((err) => {
@@ -101,10 +90,14 @@ router.patch('/login', (req, res) => {
         accountData.pin = hash;
         if (user.hashed_pin != hash) {
           res.status(401).json({ message: 'PIN mismatch.' });
+        } else {
+          Account.update(userData, userData.email).then((updated_user) => {
+            res.status(200).json(updated_user);
+          })
+          .catch(err => {
+            res.status(500).json({message: "Server error updating account data.", error: err});
+          });
         }
-        Account.update(userData, userData.email).then((updated_user) => {
-          res.status(200).json(updated_user);
-        });
       }
     })
     .catch((err) => {
