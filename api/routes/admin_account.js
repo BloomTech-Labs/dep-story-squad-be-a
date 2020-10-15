@@ -5,23 +5,25 @@ const Account = require('../models/accountModel.js');
 
 // req.body.email
 router.get('/email', (req, res) => {
-    Account.findByEmail(req.body.email)
+    const { email } = req.body;
+    Account.findByEmail(email)
         .then(account => {
             res.status(200).json(account);
         })
         .catch(err => {
-            res.status(500).json({ message: `.catch activated; ${req.body.email}`, error: err });
+            res.status(500).json({ message: `.catch activated; ${email}`, error: err });
         });
 });
 
 // Return user info from req.params.id
 router.get('/:id', (req, res) => {
-    Account.findById(req.params.id)
+    const id = req.params.id
+    Account.findById(id)
         .then(account => {
             res.status(200).json(account);
         })
         .catch(err => {
-            res.status(500).json({ message: `.catch activated; ${req.params.id}`, error: err });
+            res.status(500).json({ message: `.catch activated; ${id}`, error: err });
         });
 });
 
