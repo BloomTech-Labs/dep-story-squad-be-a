@@ -29,6 +29,8 @@ https://story-squad-dev.herokuapp.com/api
 
 | URL                  | Request | Description                                              |
 |----------------------|---------|----------------------------------------------------------|
+| [/admin_account/:id](#GET/admin_account/:id) | GET | Retrieves account info. |
+| [/admin_account/email](#GET/admin_account/email) | GET |Retrieves account info. |
 | [/ds_story/:story_id](#GET/ds_story/:story_id) | GET | Retrieves story info. |
 | [/ds_story/:story_id](#PATCH/ds_story/:story_id) | PATCH | Updates story info. |
 
@@ -128,6 +130,61 @@ Returns:
 | 401 | PIN mismatch |
 | 404 | User not in db |
 | 500 | Failed to update user |
+
+### <a name="GET/admin_account/:id"></a>GET /api/admin_account/:id
+
+Request body:
+```json
+    {
+        "headers": {
+            "Authorization": "secret (string)"
+        }
+    }
+```
+
+Returns:
+```json
+    {
+        "account_id": "uuid",
+        "username": "string",
+        "student_ids": "array of uuids",
+        "settings": "json object",
+    }
+```
+
+| HTTP Response Code | Reason                 |
+|--------------------|------------------------|
+| 200 | Success |
+| 401 | Mismatch in ds_secret middleware |
+| 500 | error in Account.findById call |
+
+### <a name="GET/admin_account/email"></a>GET /api/admin_account/:email
+
+Request body:
+```json
+    {
+        "headers": {
+            "Authorization": "secret (string)"
+        },
+        "email": "email (string)"
+    }
+```
+
+Returns:
+```json
+    {
+        "account_id": "uuid",
+        "username": "string",
+        "student_ids": "array of uuids",
+        "settings": "json object",
+    }
+```
+
+| HTTP Response Code | Reason                 |
+|--------------------|------------------------|
+| 200 | Success |
+| 401 | Mismatch in ds_secret middleware |
+| 500 | error in Account.findById call |
 
 ### <a name="GET/ds_story/:story_id"></a>GET /api/ds_story/:story_id
 Request body:
