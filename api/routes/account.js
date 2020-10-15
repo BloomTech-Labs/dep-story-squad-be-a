@@ -10,30 +10,30 @@ const Hash_tools = require('../tools/hash_tools');
 router.get('/login', (req, res) => {
   if (!req.jwt) {
     res.status(400).json({ message: 'No JWT; could not authorize.' });
-  }
-  Account.findByEmail(req.jwt.claims.email)
-    .then((user) => {
-      const hash = Hash_tools.hasher(req.body.pin);
-      if (!user) {
-        res.status(404).json({ message: 'Account not found.' });
-      } else {
-        res.status(200).json(user);
-      }
-    })
-    .catch((err) => {
-      res
-        .status(500)
-        .json({
-          message: `Error searching for account by req.jwt.claims.email == ${req.jwt.claims.email}.`,
-          error: err
+  } else {
+    const email = req.jwt.claims.email;
+    Account.findByEmail(email)
+      .then((user) => {
+        if (!user) {
+          res.status(404).json({ message: 'Account not found.' });
+        } else {
+          res.status(200).json(user);
+        }
+      })
+      .catch((err) => {
+        res.status(500).json({
+          message: `Error searching for account by req.jwt.claims.email == ${email}.`,
+          error: err,
         });
-    });
+      });
+  }
 });
 
 /* Adds new account to DB (based on token)
     requires req.body.pin */
 router.post('/login', (req, res) => {
-  Account.findByEmail(req.jwt.claims.email)
+  const email = req.jwt.claims.email;
+  Account.findByEmail(email)
     .then((user) => {
       if (user) {
         res.status(409).json({ message: 'User already in db.' });
@@ -41,9 +41,6 @@ router.post('/login', (req, res) => {
         let accountData = req.body;
         const hash = Hash_tools.hasher(accountData.pin);
         accountData.pin = hash;
-        // const customer = await stripe.customers.create({
-        //     description: 'Stripe customer object',
-        //   });
         stripe.customers
           .create({
             description: 'Stripe customer object',
@@ -58,27 +55,19 @@ router.post('/login', (req, res) => {
                 res.status(500).json({ message: 'Failed to add user.' });
               });
           })
-          .catch(err => {
-              res.status(500).json({ message: 'Error creating Stripe customer object.', error: err });
+          .catch((err) => {
+            res.status(500).json({
+              message: 'Error creating Stripe customer object.',
+              error: err,
+            });
           });
-        // accountData.stripe = customer;
-        // Account.add(accountData)
-        // .then(user => {
-        //     res.status(201).json(user);
-        // })
-        // .catch (err => {
-        //     res.status(500).json({ message: 'Failed to add user.' })
-        // })
       }
     })
     .catch((err) => {
-      res
-        .status(500)
-        .json({
-          message:
-            'Error checking for existing account by req.jwt.claims.email.',
-          error: err,
-        });
+      res.status(500).json({
+        message: 'Error checking for existing account by req.jwt.claims.email.',
+        error: err,
+      });
     });
 });
 
@@ -92,30 +81,30 @@ router.patch('/login', (req, res) => {
       } else {
         let accountData = req.body;
         if (accountData.paid_until) {
-          res
-            .status(403)
-            .json({
-              message:
-                'Payment horizon should only update when payment confirmation is received from Stripe.',
-            });
+          res.status(403).json({
+            message:
+              'Payment horizon should only update when payment confirmation is received from Stripe.',
+          });
         }
         const hash = Hash_tools.hasher(accountData.pin);
         accountData.pin = hash;
         if (user.hashed_pin != hash) {
           res.status(401).json({ message: 'PIN mismatch.' });
+        } else {
+          Account.update(userData, userData.email).then((updated_user) => {
+            res.status(200).json(updated_user);
+          })
+          .catch(err => {
+            res.status(500).json({message: "Server error updating account data.", error: err});
+          });
         }
-        Account.update(userData, userData.email).then((updated_user) => {
-          res.status(200).json(updated_user);
-        });
       }
     })
     .catch((err) => {
-      res
-        .status(500)
-        .json({
-          message: 'Error searching for account by req.jwt.claims.email.',
-          error: err,
-        });
+      res.status(500).json({
+        message: 'Error searching for account by req.jwt.claims.email.',
+        error: err,
+      });
     });
 });
 
