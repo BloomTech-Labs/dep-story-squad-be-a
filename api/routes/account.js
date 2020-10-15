@@ -2,7 +2,7 @@ const router = require('express').Router();
 const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
 
 const Account = require('../models/accountModel');
-const Student = require('..models/studentModel');
+const Student = require('../models/studentModel');
 const Hash_tools = require('../tools/hash_tools');
 
 /* Returns info for logged-in account (requires token).
