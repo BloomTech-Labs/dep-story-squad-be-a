@@ -5,13 +5,13 @@ const Account = require('../models/accountModel.js');
 
 // req.body.email
 router.get('/email', (req, res) => {
-    const { email } = req.body;
+    const email = req.body.email;
     Account.findByEmail(email)
         .then(account => {
             res.status(200).json(account);
         })
         .catch(err => {
-            res.status(500).json({ message: `.catch activated; ${email}`, error: err });
+            res.status(500).json({ message: `.catch activated; ${email}`, error: err, received: req.body });
         });
 });
 
