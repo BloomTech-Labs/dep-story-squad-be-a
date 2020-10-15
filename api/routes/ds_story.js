@@ -25,12 +25,13 @@ router.get('/:story_id', (req, res) => {
 
 router.patch('/:story_id', (req, res) => {
   const { story_id } = req.params;
+  const story_info = req.body;
   Story.findById(story_id)
     .then((story) => {
       if (!story) {
         res.status(404).json({ message: 'Story not found.' });
       }
-      Story.update(req.body, story_id).then((updated_story) => {
+      Story.update(story_info, story_id).then((updated_story) => {
         res.status(200).json(updated_story);
       });
     })

@@ -1,11 +1,3 @@
-// import createError from 'http-errors';
-// import express from 'express';
-// import cors from "cors";
-// import cookieParser from 'cookie-parser';
-// import logger from 'morgan';
-// import helmet from 'helmet';
-
-// const { createError } = require('http-errors');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -20,13 +12,6 @@ const authRequired = require('./middleware/authRequired');
 const ds_secret = require('./middleware/ds_secret');
 
 // Routers:
-// import accountRouter from './routes/account';
-// import ds_story from './routes/ds_story';
-// import promptRouter from './routes/prompt';
-// import readingRouter from './routes/reading';
-// import storyRouter from './routes/story';
-// import stripeRouter from './routes/stripe';
-// import studentRouter from './routes/student';
 const accountRouter = require('./routes/account');
 const adminAccount = require('./routes/admin_account');
 const ds_story = require('./routes/ds_story');
@@ -92,32 +77,5 @@ app.get('/api', (req, res) => {
 app.get('/', (req, res) => {
   res.status(200).json({ api: "up" });
 });
-
-// // catch 404 and forward to error handler
-// app.use(function (req, res, next) {
-//   next(new createError.NotFound(`Route '${req.url}' Not Found.`));
-// });
-
-// error handler
-// app.use(function (err, req, res, next) {
-//   if (createError.isHttpError(err)) {
-//     res.locals.message = err.message;
-//     res.locals.status = err.statusCode;
-//     if (process.env.NODE_ENV === 'development') {
-//       res.locals.error = err;
-//     }
-//   }
-  
-//   if (process.env.NODE_ENV === 'production' && !res.locals.message) {
-//     res.locals.message = 'ApplicationError';
-//     res.locals.status = 500;
-//   }
-//   if (res.locals.status) {
-//     res.status(res.locals.status || 500);
-//     const errObject = { error: res.locals.error, message: res.locals.message };
-//     return res.json(errObject);
-//   }
-//   next(err);
-// });
 
 module.exports = app;
