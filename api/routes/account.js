@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
 
-const Account = require('../models/accountModel.js');
+const Account = require('../models/accountModel');
+const Student = require('..models/studentModel');
 const Hash_tools = require('../tools/hash_tools');
 
 /* Returns info for logged-in account (requires token).
@@ -74,7 +75,8 @@ router.post('/login', (req, res) => {
 // TODO: paid_until should not be updateable through this endpoint.
 // paid_until will update when BE receives payment notification from Stripe
 router.patch('/login', (req, res) => {
-  Account.findByEmail(req.jwt.claims.email)
+  const email = req.jwt.claims.email;
+  Account.findByEmail(email)
     .then((user) => {
       if (!user) {
         res.status(404).json({ message: 'User not in db.' });
@@ -107,5 +109,26 @@ router.patch('/login', (req, res) => {
       });
     });
 });
+
+router.get('/students', (req, res) => {
+  const email = req.jwt.claims.email;
+  Account.findByEmail(email)
+    .then(user => {
+      const student_ids = user.student_ids;
+      Promise.all(student_ids.map(async id => {
+        const this_student = await Student.findById(id);
+        return this_student;
+      }))
+        .then(students => {
+          res.status(200).json({ students: students });
+        })
+        .catch(err => {
+          res.status(500).json({ message: 'Error retrieving info for individual students.', error: err });
+        });
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'Error retrieving user info.', error: err });
+    });
+})
 
 module.exports = router;
