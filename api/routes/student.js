@@ -65,16 +65,17 @@ router.patch('/:student_id', (req, res) => {
 });
 
 router.post('/', (req, res)=>{
-    Student.findByUsername(req.body.username)
+    const username = req.body.username;
+    Student.findByUsername(username)
     .then(found_student => {
         console.log('found_student: ', found_student);
         if (found_student) {
             res.status(409).json({ message: 'Username already taken.' })
         } else {
             let studentData = req.body;
-            console.log('studentData: ', studentData);
             const hash = Hash_tools.hasher(studentData.pin);
             studentData.pin = hash;
+            console.log('studentData: ', studentData);
             Student.add(studentData)
             .then(student => {
                 console.log('student: ', student);
