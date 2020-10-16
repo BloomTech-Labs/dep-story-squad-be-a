@@ -112,6 +112,7 @@ router.patch('/login', (req, res) => {
 
 router.get('/students', (req, res) => {
   const email = req.jwt.claims.email;
+  console.log('email: ', email);
   Account.findByEmail(email)
     .then(user => {
       const student_ids = user.student_ids;
