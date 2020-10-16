@@ -8,11 +8,11 @@ module.exports = {
 }
 
 function findById(id) {
-    return db("student").where({ student_id: id });
+    return db("student").where({ student_id: id }).first();
 }
 
 function findByUsername(username) {
-    return db("student").where({ username: username });
+    return db("student").where({ username: username }).first();
 }
 
 function add(new_student) {

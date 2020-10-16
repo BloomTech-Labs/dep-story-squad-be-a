@@ -9,11 +9,11 @@ module.exports = {
 }
 
 function findById(id) {
-    return db("account").where({ account_id: id });
+    return db("account").where({ account_id: id }).first();
 }
 
 function findByEmail(email) {
-    return db("account").where({ email: email });
+    return db("account").where({ email: email }).first();
 }
 
 function add(new_account) {
