@@ -124,7 +124,7 @@ router.get('/students', (req, res) => {
     console.log('email: ', email);
     Account.findByEmail(email)
       .then((user) => {
-        const student_ids = user.student_ids;
+        const student_ids = user.student_ids || [];
         console.log('IDs: ', student_ids);
         Promise.all(
           student_ids.map(async (id) => {
