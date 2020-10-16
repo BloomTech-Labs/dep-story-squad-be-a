@@ -128,7 +128,7 @@ router.get('/students', (req, res) => {
     })
     .catch(err => {
       const claims = req.jwt.claims;
-      res.status(500).json({ message: 'Error retrieving user info.', error: err, claims: claims });
+      res.status(500).json({ message: 'Error retrieving user info.', error: err, claims: claims, email: email });
     });
 })
 
