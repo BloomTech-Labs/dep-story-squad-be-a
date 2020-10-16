@@ -125,16 +125,21 @@ router.get('/students', (req, res) => {
     Account.findByEmail(email)
       .then((user) => {
         const student_ids = user.student_ids;
+        console.log('IDs: ', student_ids);
         Promise.all(
           student_ids.map(async (id) => {
+            console.log('id: ', id);
             const this_student = await Student.findById(id);
+            console.log('this_student: ', this_student);
             return this_student;
           })
         )
           .then((students) => {
+            console.log('students: ', students);
             res.status(200).json({ students: students });
           })
           .catch((err) => {
+            console.log('err: ', err);
             res
               .status(500)
               .json({
@@ -144,6 +149,7 @@ router.get('/students', (req, res) => {
           });
       })
       .catch((err) => {
+        console.log('err: ', err);
         const claims = req.jwt.claims;
         res
           .status(500)
