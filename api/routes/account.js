@@ -93,12 +93,18 @@ router.patch('/login', (req, res) => {
         if (user.hashed_pin != hash) {
           res.status(401).json({ message: 'PIN mismatch.' });
         } else {
-          Account.update(userData, userData.email).then((updated_user) => {
-            res.status(200).json(updated_user);
-          })
-          .catch(err => {
-            res.status(500).json({message: "Server error updating account data.", error: err});
-          });
+          Account.update(userData, userData.email)
+            .then((updated_user) => {
+              res.status(200).json(updated_user);
+            })
+            .catch((err) => {
+              res
+                .status(500)
+                .json({
+                  message: 'Server error updating account data.',
+                  error: err,
+                });
+            });
         }
       }
     })
@@ -111,26 +117,44 @@ router.patch('/login', (req, res) => {
 });
 
 router.get('/students', (req, res) => {
-  const email = req.jwt.claims.email;
-  console.log('email: ', email);
-  Account.findByEmail(email)
-    .then(user => {
-      const student_ids = user.student_ids;
-      Promise.all(student_ids.map(async id => {
-        const this_student = await Student.findById(id);
-        return this_student;
-      }))
-        .then(students => {
-          res.status(200).json({ students: students });
-        })
-        .catch(err => {
-          res.status(500).json({ message: 'Error retrieving info for individual students.', error: err });
-        });
-    })
-    .catch(err => {
-      const claims = req.jwt.claims;
-      res.status(500).json({ message: 'Error retrieving user info.', error: err, claims: claims, email: email });
-    });
-})
+  if (!req.jwt) {
+    res.status(400).json({ message: 'No JWT; could not authorize.' });
+  } else {
+    const email = req.jwt.claims.email;
+    console.log('email: ', email);
+    Account.findByEmail(email)
+      .then((user) => {
+        const student_ids = user.student_ids;
+        Promise.all(
+          student_ids.map(async (id) => {
+            const this_student = await Student.findById(id);
+            return this_student;
+          })
+        )
+          .then((students) => {
+            res.status(200).json({ students: students });
+          })
+          .catch((err) => {
+            res
+              .status(500)
+              .json({
+                message: 'Error retrieving info for individual students.',
+                error: err,
+              });
+          });
+      })
+      .catch((err) => {
+        const claims = req.jwt.claims;
+        res
+          .status(500)
+          .json({
+            message: 'Error retrieving user info.',
+            error: err,
+            claims: claims,
+            email: email,
+          });
+      });
+  }
+});
 
 module.exports = router;
