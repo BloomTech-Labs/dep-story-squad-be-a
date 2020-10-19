@@ -74,7 +74,7 @@ router.post('/', (req, res)=>{
         } else {
             let studentData = req.body;
             const hash = Hash_tools.hasher(studentData.pin);
-            studentData.pin = hash;
+            studentData.hashed_pin = hash;
             console.log('studentData: ', studentData);
             Student.add(studentData)
             .then(student => {
