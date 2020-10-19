@@ -74,9 +74,13 @@ router.post('/', (req, res)=>{
         } else {
             let studentData = req.body;
             const hash = Hash_tools.hasher(studentData.pin);
-            studentData.hashed_pin = hash;
+            const new_student = {
+                username: studentData.username,
+                account_id: studentData.account_id,
+                hashed_pin: hash
+            }
             console.log('studentData: ', studentData);
-            Student.add(studentData)
+            Student.add(new_student)
             .then(student => {
                 console.log('student: ', student);
                 Account.findById(student.account_id)
