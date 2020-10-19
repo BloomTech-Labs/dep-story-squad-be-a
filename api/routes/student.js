@@ -42,8 +42,10 @@ router.patch('/:student_id', (req, res) => {
                     if (student.hashed_pin != hash) {
                         res.status(401).json({ message: 'PIN mismatch.' });
                     } else {
-                        studentData.pin = hash;
-                        Student.update(studentData, student_id)
+                        updatedData = { hashed_pin: hash };
+                        if (studentData.settings) { updatedData.settings = studentData.settings; }
+                        if (studentData.records) { updatedData.records = studentData.records; }
+                        Student.update(updatedData, student_id)
                         .then(updated_student => {
                             res.status(200).json(updated_student);
                         })

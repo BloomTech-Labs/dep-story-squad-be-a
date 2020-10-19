@@ -34,34 +34,47 @@ router.get('/login', (req, res) => {
     requires req.body.pin */
 router.post('/login', (req, res) => {
   const email = req.jwt.claims.email;
+  const username = req.body.username;
   Account.findByEmail(email)
     .then((user) => {
       if (user) {
         res.status(409).json({ message: 'User already in db.' });
       } else {
-        let accountData = req.body;
-        const hash = Hash_tools.hasher(accountData.pin);
-        accountData.pin = hash;
-        stripe.customers
-          .create({
-            description: 'Stripe customer object',
-          })
-          .then((customer) => {
-            accountData.stripe = customer;
-            Account.add(accountData)
-              .then((user) => {
-                res.status(201).json(user);
+        Account.findByUsername(username).then((found_user) => {
+          if (found_user) {
+            res.status(409).json({ message: 'Username taken.' });
+          } else {
+            let accountData = req.body;
+            const hash = Hash_tools.hasher(accountData.pin);
+            let new_account = {
+              email: accountData.email,
+              username: accountData.username,
+              student_ids: [],
+              hashed_pin: hash,
+              settings: accountData.settings,
+            };
+            stripe.customers
+              .create({
+                description: 'Stripe customer object',
+              })
+              .then((customer) => {
+                new_account.stripe = customer;
+                Account.add(new_account)
+                  .then((user) => {
+                    res.status(201).json(user);
+                  })
+                  .catch((err) => {
+                    res.status(500).json({ message: 'Failed to add user.' });
+                  });
               })
               .catch((err) => {
-                res.status(500).json({ message: 'Failed to add user.' });
+                res.status(500).json({
+                  message: 'Error creating Stripe customer object.',
+                  error: err,
+                });
               });
-          })
-          .catch((err) => {
-            res.status(500).json({
-              message: 'Error creating Stripe customer object.',
-              error: err,
-            });
-          });
+          }
+        });
       }
     })
     .catch((err) => {
@@ -89,21 +102,34 @@ router.patch('/login', (req, res) => {
           });
         }
         const hash = Hash_tools.hasher(accountData.pin);
-        accountData.pin = hash;
         if (user.hashed_pin != hash) {
           res.status(401).json({ message: 'PIN mismatch.' });
         } else {
-          Account.update(userData, userData.email)
+          let updatedData = { hashed_pin: hash };
+          if (accountData.email) {
+            updatedData.email = accountData.email;
+          }
+          if (accountData.username) {
+            updatedData.username = accountData.username;
+          }
+          if (accountData.student_ids) {
+            updatedData.student_ids = accountData.student_ids;
+          }
+          if (accountData.settings) {
+            updatedData.settings = accountData.settings;
+          }
+          if (accountData.stripe) {
+            updatedData.stripe = accountData.stripe;
+          }
+          Account.update(updatedData, accountData.email)
             .then((updated_user) => {
               res.status(200).json(updated_user);
             })
             .catch((err) => {
-              res
-                .status(500)
-                .json({
-                  message: 'Server error updating account data.',
-                  error: err,
-                });
+              res.status(500).json({
+                message: 'Server error updating account data.',
+                error: err,
+              });
             });
         }
       }
@@ -134,24 +160,20 @@ router.get('/students', (req, res) => {
             res.status(200).json({ students: students });
           })
           .catch((err) => {
-            res
-              .status(500)
-              .json({
-                message: 'Error retrieving info for individual students.',
-                error: err,
-              });
+            res.status(500).json({
+              message: 'Error retrieving info for individual students.',
+              error: err,
+            });
           });
       })
       .catch((err) => {
         const claims = req.jwt.claims;
-        res
-          .status(500)
-          .json({
-            message: 'Error retrieving user info.',
-            error: err,
-            claims: claims,
-            email: email,
-          });
+        res.status(500).json({
+          message: 'Error retrieving user info.',
+          error: err,
+          claims: claims,
+          email: email,
+        });
       });
   }
 });

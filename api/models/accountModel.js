@@ -3,6 +3,7 @@ const db = require("../../data/db-config.js");
 module.exports = {
     findById,
     findByEmail,
+    findByUsername,
     add,
     update,
     updateById
@@ -14,6 +15,10 @@ function findById(id) {
 
 function findByEmail(email) {
     return db("account").where({ email: email }).first();
+}
+
+function findByUsername(username) {
+    return db("account").where({ username: username }).first();
 }
 
 function add(new_account) {
@@ -28,6 +33,7 @@ function update(new_data, email) {
     return db("account")
         .where({ email: email })
         .update(new_data)
+        .returning([account_id]);
 }
 
 function updateById(new_data, id) {
