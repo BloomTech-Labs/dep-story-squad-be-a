@@ -1,9 +1,7 @@
-// import createError from 'http-errors';
-// import OktaJwtVerifier from '@okta/jwt-verifier';
-
-// const { createError } = require('http-errors');
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 
+// expectedAudience will be updated
+// (will require Okta account access)
 const expectedAudience = 'api://default';
 const oktaJwtVerifier = new OktaJwtVerifier({
   // Okta environment variables set manually
@@ -50,6 +48,9 @@ const authRequired = async (req, res, next) => {
     })
     .catch( err => {
       if (err.parsedBody.email) {
+        /* oktaJwtVerifier currently returns claims in error message.
+          If this middleware receives claims in err.parsedBody,
+          claims are attached to req.jwt and forwarded to router. */
         req.jwt = {};
         req.jwt.claims = err.parsedBody;
         next();

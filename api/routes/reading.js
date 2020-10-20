@@ -3,6 +3,8 @@ const router = require('express').Router();
 const Reading = require('../models/readingModel.js');
 const Prompt = require('../models/promptModel.js');
 
+// protected by authRequired middleware
+
 router.get('/:reading_id', (req, res) => {
     const { reading_id } = req.params;
     Reading.findById(reading_id)

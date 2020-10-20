@@ -6,6 +6,8 @@ const { response } = require('express');
 const payment_status = require('../tools/payment_status');
 const authRequired = require('../middleware/authRequired');
 
+// NOTE: some endpoints here are to be called by Stripe, not by the front end.
+
 // Get endpointSecret from Stripe Dashboard
 const endpointSecret = process.env.ENDPOINT_SECRET || 'whsec_...';
 
@@ -69,6 +71,8 @@ router.post('/subscribe', authRequired, async (req, res) => {
     res.json({ id: session.id });
 });
 
+// The /webhook endpoint is to be accessed by Stripe
+// See Stripe documentation
 // TODO: parse req to determine how far ahead account has paid
 router.post('/webhook', bodyParser.raw({type: 'application/json'}), (req, res) => {
     const payload = req.body;
@@ -91,6 +95,9 @@ router.post('/webhook', bodyParser.raw({type: 'application/json'}), (req, res) =
 });
 
 module.exports = router;
+
+// Following commented code is provided by Stripe
+// (See Stripe documentation)
 
 // Retrieve payment methods:
 // const paymentMethods = await stripe.paymentMethods.list({

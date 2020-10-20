@@ -2,6 +2,9 @@ const router = require('express').Router();
 
 const Prompt = require('../models/promptModel.js');
 
+// Protected by authRequired middleware
+// (need Okta token to access)
+
 router.get('/:prompt_id', (req, res) => {
     const { prompt_id } = req.params;
     Prompt.findById(prompt_id)

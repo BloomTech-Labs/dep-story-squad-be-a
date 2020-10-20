@@ -9,6 +9,7 @@ module.exports = {
 
 // Compares req.body.pin to hashed_pin for req.body.account_id
 // Does not check or pull data from token
+// Use this middleware when account user (parent) is logged in.
 const accountPIN = async (req, res, next) => {
     if (!req.body.pin) {
         res.status(400).json({ message: 'PIN required as req.body.pin'});
@@ -35,6 +36,7 @@ const accountPIN = async (req, res, next) => {
 
 // Compares req.body.pin to hashed_pin for req.body.student_id
 // Does not check or pull data from token
+// Use this middleware for student endpoints
 const studentPIN = async (req, res, next) => {
     if (!req.body.pin) {
         res.status(400).json({ message: 'PIN required as req.body.pin'});

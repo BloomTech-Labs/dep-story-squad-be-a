@@ -5,6 +5,8 @@ const Account = require('../models/accountModel.js');
 const Hash_tools = require('../tools/hash_tools');
 
 router.get('/:student_id', (req, res) => {
+    // Protected by authRequired
+    // Will only retrieve info for student associated with logged-in account
     const { student_id } = req.params;
     Student.findById(student_id)
     .then(student => {
@@ -30,6 +32,9 @@ router.get('/:student_id', (req, res) => {
 });
 
 router.patch('/:student_id', (req, res) => {
+    // Protected by authRequired
+    // Will only update info for student associated with logged-in account
+    const { student_id } = req.params;
     const { student_id } = req.params;
     Student.findById(student_id)
     .then(student => {
@@ -42,6 +47,7 @@ router.patch('/:student_id', (req, res) => {
                     if (student.hashed_pin != hash) {
                         res.status(401).json({ message: 'PIN mismatch.' });
                     } else {
+                        // control updateable data here
                         updatedData = { hashed_pin: hash };
                         if (studentData.settings) { updatedData.settings = studentData.settings; }
                         if (studentData.records) { updatedData.records = studentData.records; }
@@ -67,10 +73,10 @@ router.patch('/:student_id', (req, res) => {
 });
 
 router.post('/', (req, res)=>{
+    // Associates new student with logged-in account
     const username = req.body.username;
     Student.findByUsername(username)
     .then(found_student => {
-        console.log('found_student: ', found_student);
         if (found_student) {
             res.status(409).json({ message: 'Username already taken.' })
         } else {
@@ -81,18 +87,15 @@ router.post('/', (req, res)=>{
                 account_id: studentData.account_id,
                 hashed_pin: hash
             }
-            console.log('studentData: ', studentData);
             Student.add(new_student)
             .then(student => {
-                console.log('student: ', student);
+                // add new student to list of students in account
                 Account.findById(student.account_id)
                 .then(account => {
-                    console.log('account: ', account);
                     let student_ids = account.student_ids || [];
                     student_ids.push(student.student_id);
                     Account.updateById({student_ids: student_ids }, student.account_id)
                     .then(updated_account => {
-                        console.log('updated_account: ', updated_account);
                         res.status(201).json(student);
                     })
                     .catch(err => {

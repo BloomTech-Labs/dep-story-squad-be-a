@@ -4,6 +4,12 @@ const Story = require('../models/storyModel.js');
 const Student = require('../models/studentModel.js');
 const Account = require('../models/accountModel.js');
 
+// This route is for user-generated stories.
+// App-provided stories/chapters use /reading
+
+// All endpoints protected by authRequired;
+// Okta token required.
+
 router.get('/:story_id', (req, res) => {
   const { story_id } = req.params;
   Story.findById(story_id)
@@ -28,6 +34,8 @@ router.patch('/:story_id', (req, res) => {
       if (!story) {
         res.status(404).json({ message: 'Story not found.' });
       }
+      // Confirm that story is from student associated with logged-in account:
+      // TODO: match PIN of logged-in student with authoring student
       Student.findById(story.student_id)
         .then((student) => {
           if (!student) {
@@ -44,6 +52,7 @@ router.patch('/:story_id', (req, res) => {
                     message: 'Story not associated with logged-in account.',
                   });
               } else {
+                  // Control what info can be updated here
                   let updated_info = {}
                   if (req.body.s3_url){ updated_info.s3_url = req.body.s3_url }
                   if (req.body.s3_key){ updated_info.s3_key = req.body.s3_key }

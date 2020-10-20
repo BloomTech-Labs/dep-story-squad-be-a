@@ -1,9 +1,14 @@
 // DO NOT DEPLOY UNPROTECTED
+// Use these endpoints to access data without Okta token
+// Currently uses ds_secret middleware
+// TODO: 
+//      - build endpoints here as necessary
+//      - add validation separate from DS secret
 
 const router = require('express').Router();
 const Account = require('../models/accountModel.js');
 
-// req.body.email
+// Return user based on req.body.email
 router.get('/email', (req, res) => {
     const email = req.body.email;
     Account.findByEmail(email)
