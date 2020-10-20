@@ -18,6 +18,7 @@ exports.up = function(knex) {
       tbl.string('hashed_pin')
         .notNullable();
       tbl.json('settings')
+        // Front end can determine contents/format
         .defaultTo({});
       tbl.json('stripe')
         .defaultTo({});

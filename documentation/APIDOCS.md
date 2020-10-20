@@ -18,7 +18,7 @@ https://story-squad-dev.herokuapp.com/api
 | [/story](#POST/story) | POST | Adds new story to db. |
 | [/story/:story_id](GET/story/:story_id) | GET | Retrieves story with specified ID. |
 | [/story/:story_id](PATCH/story/:story_id) | PATCH | Updates story with specified ID. |
-| /s[tripe/card-wallet](#GET/stripe/card-wallet) | GET | Returns client_secret to update saved cards. |
+| [/stripe/card-wallet](#GET/stripe/card-wallet) | GET | Returns client_secret to update saved cards. |
 | [/stripe/payment](#POST/stripe/payment) | POST | Processes payment through Stripe |
 | [/stripe/subscribe](#POST/stripe/subscribe) | POST | Sets up new subscription |
 | [/student](#POST/student) | POST | Creates new student for logged-in account |

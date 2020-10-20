@@ -30,6 +30,15 @@
 | reading_id | uuid | yes | no | foreign key for reading |
 | [prompt_info](#prompt.prompt_info) | json | no | no | info re: prompt, including text |
 
+## <a name="Reading"></a>Reading
+| Name | Type | Required | Unique | Notes |
+|------|------|----------|--------|-------|
+| reading_id | int | yes | yes | id for reading file (auto-increments) |
+| s3_url | string | no | no | URL for reading file (during development) |
+| s3_key | string | no | no | S3 key for reading file access |
+| [about](#reading.about) | json | no | no | data, description, and statistics (added as needed) |
+| [prompts](#reading.prompts) | json | no | no | prompts related to this reading |
+
 ## <a name="Story"></a>Story
 | Name | Type | Required | Unique | Notes |
 |------|------|----------|--------|-------|
@@ -50,48 +59,39 @@
 | [settings](#student.settings) | json | no | no | student profile/settings |
 | [records](#student.records) | json | no | no | student records/history |
 
-## <a name="Reading"></a>Reading
-| Name | Type | Required | Unique | Notes |
-|------|------|----------|--------|-------|
-| reading_id | uuid | yes | yes | id for reading file |
-| s3_url | string | no | no | URL for reading file (during development) |
-| s3_key | string | no | no | S3 key for reading file access |
-| [about](#reading.about) | json | no | no | data, description, and statistics (added as needed) |
-| [prompts](#reading.prompts) | json | no | no | prompts related to this reading |
-
 # <a name="JSON"></a>JSON object contents
 
 ### <a name="account.settings"></a>account.settings
 {
-
+    "format": "determined by front end"
 }
 
 ### <a name="prompt.prompt_info"></a>prompt.prompt_info
 {
-    
+    "format": "determined by front end"
 }
 
 ### <a name="story.about"></a>story.about
 {
-    
+    "format": "determined by front end"
 }
 
 ### <a name="student.settings"></a>student.settings
 {
-    
+    "format": "determined by front end"
 }
 
 ### <a name="student.records"></a>student.records
 {
-    
+    "format": "determined by front end"
 }
 
 ### <a name="reading.about"></a>reading.about
 {
-    
+    "format": "determined by front end"
 }
 
 ### <a name="reading.prompts"></a>reading.prompts
 {
-    
+    "format": "determined by front end"
 }

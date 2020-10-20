@@ -16,8 +16,11 @@ router.get('/login', (req, res) => {
     Account.findByEmail(email)
       .then((user) => {
         if (!user) {
+          // if no user with logged-in email
+          // (will need to POST /account/login)
           res.status(404).json({ message: 'Account not found.' });
         } else {
+          // TODO: control what parts of user info are returned.
           res.status(200).json(user);
         }
       })
@@ -46,6 +49,7 @@ router.post('/login', (req, res) => {
           } else {
             let accountData = req.body;
             const hash = Hash_tools.hasher(accountData.pin);
+            // Send only data expected by "account" table:
             let new_account = {
               email: accountData.email,
               username: accountData.username,
@@ -53,14 +57,17 @@ router.post('/login', (req, res) => {
               hashed_pin: hash,
               settings: accountData.settings,
             };
+            // Create Stripe customer object:
             stripe.customers
               .create({
                 description: 'Stripe customer object',
               })
               .then((customer) => {
                 new_account.stripe = customer;
+                // Now add new user to DB:
                 Account.add(new_account)
                   .then((user) => {
+                    // TODO: select returned data
                     res.status(201).json(user);
                   })
                   .catch((err) => {
@@ -101,10 +108,16 @@ router.patch('/login', (req, res) => {
               'Payment horizon should only update when payment confirmation is received from Stripe.',
           });
         }
+        // Only accept account update when account user (not student user) is logged in:
         const hash = Hash_tools.hasher(accountData.pin);
         if (user.hashed_pin != hash) {
           res.status(401).json({ message: 'PIN mismatch.' });
         } else {
+          // Select data from accountData i.e. req.body
+          // Here is where to limit what can be updated.
+          // paid_until should not be updated here;
+          // will be updated when payment notice received
+          // through /stripe route
           let updatedData = { hashed_pin: hash };
           if (accountData.email) {
             updatedData.email = accountData.email;
@@ -119,6 +132,7 @@ router.patch('/login', (req, res) => {
             updatedData.settings = accountData.settings;
           }
           if (accountData.stripe) {
+            // TODO: consider whether to restrict this
             updatedData.stripe = accountData.stripe;
           }
           Account.update(updatedData, accountData.email)
@@ -149,6 +163,7 @@ router.get('/students', (req, res) => {
     const email = req.jwt.claims.email;
     Account.findByEmail(email)
       .then((user) => {
+        // Return array of student objects associated with logged-in account
         const student_ids = user.student_ids || [];
         Promise.all(
           student_ids.map(async (id) => {

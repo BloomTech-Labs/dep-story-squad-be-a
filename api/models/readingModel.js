@@ -5,5 +5,6 @@ module.exports = {
 }
 
 function findById(id) {
-    return db("reading").where({ reading_id: id });
+    // reading_id is a UUID string
+    return db("reading").where({ reading_id: id }).first();
 }
