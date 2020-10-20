@@ -35,7 +35,6 @@ router.patch('/:student_id', (req, res) => {
     // Protected by authRequired
     // Will only update info for student associated with logged-in account
     const { student_id } = req.params;
-    const { student_id } = req.params;
     Student.findById(student_id)
     .then(student => {
         if (student) {
