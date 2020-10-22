@@ -40,6 +40,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// OIDC calls included as another option
+// (not implemented)
 const oidc = new ExpressOIDC({
   issuer: process.env.OKTA_URL_ISSUER,
   client_id: process.env.OKTA_CLIENT_ID,
