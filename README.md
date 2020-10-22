@@ -6,13 +6,41 @@
 
 - [Labs Engineering Standard requirements found here](https://labs.lambdaschool.com/topics/node-js/)
 
-## API doc
+## Contributors
+
+| [M Groesbeck](https://github.com/MMGroesbeck) |
+| --------------------------------------------- |
+| [<img src="https://avatars1.githubusercontent.com/u/59658087?s=460&u=8df0cdedcfab8315a6802db3412fc9c9aa9e4e07&v=4" width="200" />](https://github.com/MMGroesbeck) |
+| [<img src="https://github.com/favicon.ico" width="15"> ](https://github.com/MMGroesbeck) |
+| [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/m-groesbeck/) |
+
+## API documentation
 
 All routes can be viewed in the [/documentation/APIDOCS.md](./documentation/APIDOCS.md) file
 
-## DB doc
+## DB documentation
 
 Table info can be viewed in the [/documentation/DBDOCS.md](./documentation/DBDOCS.md) file
+
+## Tech Stack and Third-Party Services
+
+### Node.js + Express.js
+- Flexible and well-supported framework for back-end and API
+
+### PostgreSQL
+- Relational database for structured storage and retrieval of data
+- Supports JSON object storage for flexible architecture
+- Knex.js to build queries in JS back end
+
+### Okta
+- Third-party authentication and access management
+- Transparent for end user, but adds additional security for personal information
+- Account passwords are not saved to Story Squad database (not even account password hash)
+
+### Stripe
+- Third-party payment processing
+- Allows offline payment processing
+- Financial information is never saved to Story Squad database
 
 ## Getting Started -- DEPRECATED
 
