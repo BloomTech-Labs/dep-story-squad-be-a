@@ -43,34 +43,45 @@ router.get('/:student_id', (req, res) => {
 });
 
 router.patch('/:student_id', (req, res) => {
+  console.log('body in student patch endpoint', req.body);
   // Protected by authRequired
   // Will only update info for student associated with logged-in account
   const { student_id } = req.params;
   Student.findById(student_id)
     .then((student) => {
+      console.log('student data in router patch', student);
       if (student) {
         Account.findById(student.account_id)
           .then((account) => {
+            console.log('account', account);
             if (account.email == req.jwt.claims.email) {
               let studentData = req.body;
-              const hash = Hash_tools.hasher(studentData.pin);
-              if (student.hashed_pin != hash) {
-                res.status(401).json({ message: 'PIN mismatch.' });
-              } else {
-                // control updateable data here
-                updatedData = { hashed_pin: hash };
-                if (studentData.settings) {
-                  updatedData.settings = studentData.settings;
+              // if (studentData.settings) {
+              //   let updatedData = {};
+              //   updatedData.settings = studentData.settings;
+              // }
+              // if (studentData.records) {
+              //   updatedData.records = studentData.records;
+              // }
+              Student.update(studentData, student_id).then(
+                (updated_student) => {
+                  res.status(200).json(updated_student);
                 }
-                if (studentData.records) {
-                  updatedData.records = studentData.records;
-                }
-                Student.update(updatedData, student_id).then(
-                  (updated_student) => {
-                    res.status(200).json(updated_student);
-                  }
-                );
-              }
+              );
+              console.log('STUDENT DATA IN NEST', studentData);
+              // const hash = Hash_tools.hasher('1111');
+              // if (student.hashed_pin != hash) {
+              //   console.log(
+              //     'line 62 condition on hash match',
+              //     student.hashed_pin,
+              //     hash
+              //   );
+              //   res.status(401).json({ message: 'PIN mismatch.' });
+              // } else {
+              //   control updateable data here
+              //   updatedData = { hashed_pin: hash };
+
+              // }
             } else {
               res.status(401).json({
                 message:
@@ -81,7 +92,7 @@ router.patch('/:student_id', (req, res) => {
           .catch((err) => {
             res.status(500).json({
               message: 'Error retrieving account for student.',
-              error: err,
+              error: err.message,
             });
           });
       } else {
@@ -117,7 +128,8 @@ router.post('/', (req, res) => {
         res.status(409).json({ message: 'Username already taken.' });
       } else {
         let studentData = req.body;
-        const hash = Hash_tools.hasher(studentData.pin);
+        const hash = Hash_tools.hasher(studentData.pin, 4);
+        console.log('Hashed pin in student router', hash);
         const new_student = {
           username: studentData.username,
           account_id: studentData.account_id,
