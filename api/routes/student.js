@@ -43,17 +43,14 @@ router.get('/:student_id', (req, res) => {
 });
 
 router.patch('/:student_id', (req, res) => {
-  console.log('body in student patch endpoint', req.body);
   // Protected by authRequired
   // Will only update info for student associated with logged-in account
   const { student_id } = req.params;
   Student.findById(student_id)
     .then((student) => {
-      console.log('student data in router patch', student);
       if (student) {
         Account.findById(student.account_id)
           .then((account) => {
-            console.log('account', account);
             if (account.email == req.jwt.claims.email) {
               let studentData = req.body;
               Student.update(studentData, student_id).then(
@@ -107,16 +104,13 @@ router.post('/', (req, res) => {
       } else {
         let studentData = req.body;
         const hash = Hash_tools.hasher(studentData.pin, 4);
-        console.log('Hashed pin in student router', hash);
         const new_student = {
           username: studentData.username,
           account_id: studentData.account_id,
           hashed_pin: hash,
         };
-        console.log(new_student);
         Student.add(new_student)
           .then((student) => {
-            console.log('student', student);
             // add new student to list of students in account
             Account.findById(student.account_id)
               .then((account) => {
@@ -127,7 +121,6 @@ router.post('/', (req, res) => {
                   student.account_id
                 )
                   .then((updated_account) => {
-                    console.log('hello student', updated_account);
                     res.status(201).json(student);
                   })
                   .catch((err) => {
