@@ -1,13 +1,11 @@
 const bcrypt = require('bcryptjs');
-const hasher = async (text, size) => {
-  try {
-    const salt = await bcrypt.genSalt(12);
-    const hash = await bcrypt.hash(text, salt);
-    return hash;
-  } catch (error) {
-    console.log(error);
-  }
-};
+
+function hasher(text, size) {
+  const hash = bcrypt.hashSync(text, 4);
+
+  return hash;
+}
+
 module.exports = {
   hasher,
 };

@@ -15,12 +15,11 @@ const oktaJwtVerifier = new OktaJwtVerifier({
 
 const testJWT = {
   claims: {
-    uid: "",
-    username: "",
-    email: ""
+    uid: '',
+    username: '',
+    email: '',
   },
 };
-
 
 /**
  * A simple middleware that asserts valid access tokens and sends 401 responses
@@ -29,7 +28,7 @@ const testJWT = {
  */
 const authRequired = async (req, res, next) => {
   try {
-    if (process.env.NODE_ENV === "testing") {
+    if (process.env.NODE_ENV === 'testing') {
       req.jwt = testJWT;
       return next();
     }
@@ -41,27 +40,30 @@ const authRequired = async (req, res, next) => {
     }
 
     const accessToken = match[1];
-    oktaJwtVerifier.verifyAccessToken(accessToken, expectedAudience)
-    .then( jwt => {
-      req.jwt = jwt;
-      console.log("MY JWT --->>>", jwt);
-      next();
-    })
-    .catch( err => {
-      console.log(err);
-      if (err.parsedBody.email) {
-        /* oktaJwtVerifier currently returns claims in error message.
+    oktaJwtVerifier
+      .verifyAccessToken(accessToken, expectedAudience)
+      .then((jwt) => {
+        req.jwt = jwt;
+        next();
+      })
+      .catch((err) => {
+        if (err.parsedBody.email) {
+          /* oktaJwtVerifier currently returns claims in error message.
           If this middleware receives claims in err.parsedBody,
           claims are attached to req.jwt and forwarded to router. */
-        req.jwt = {};
-        req.jwt.claims = err.parsedBody;
-        next();
-      } else {
-        res.status(500).json({ message: "Okta JWT validation failed.", error: err });
-      }
-    });
+          req.jwt = {};
+          req.jwt.claims = err.parsedBody;
+          next();
+        } else {
+          res
+            .status(500)
+            .json({ message: 'Okta JWT validation failed.', error: err });
+        }
+      });
   } catch (err) {
-    res.status(500).json({ message: 'Error caught in Okta middleware.', error: err });
+    res
+      .status(500)
+      .json({ message: 'Error caught in Okta middleware.', error: err });
   }
 };
 
