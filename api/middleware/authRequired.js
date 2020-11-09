@@ -35,7 +35,7 @@ const authRequired = async (req, res, next) => {
     }
     const authHeader = req.headers.authorization || '';
     const match = authHeader.match(/Bearer (.+)/);
-
+    
     if (!match) {
       res.status(401).json({ message: 'Token mismatch in Okta middleware.' });
     }
@@ -44,9 +44,11 @@ const authRequired = async (req, res, next) => {
     oktaJwtVerifier.verifyAccessToken(accessToken, expectedAudience)
     .then( jwt => {
       req.jwt = jwt;
+      console.log("MY JWT --->>>", jwt);
       next();
     })
     .catch( err => {
+      console.log(err);
       if (err.parsedBody.email) {
         /* oktaJwtVerifier currently returns claims in error message.
           If this middleware receives claims in err.parsedBody,

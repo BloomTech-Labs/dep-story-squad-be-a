@@ -4,19 +4,15 @@
 module.exports = {
   development: {
     client: 'pg',
-    connection: process.env.DATABASE_URL,
-    migrations: { directory: '../data/migrations' },
-    seeds: { directory: '../data/seeds' },
+    //connection: process.env.DATABASE_URL,
+    migrations: { directory: './data/migrations' },
+    seeds: { directory: './data/seeds' },
     pool: {
       min: 2,
       max: 10,
     },
-    connection: {
-      host: 'localhost',
-      database: 'storysquad-dev',
-      user: process.env.PG_USERNAME,
-      password: process.env.PG_PASSWORD
-    },
+    
+    connection: 'postgresql://postgres:muchi@localhost/storysquad-dev',
   },
 
   test: {

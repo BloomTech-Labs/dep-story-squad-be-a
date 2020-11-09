@@ -15,6 +15,7 @@ function findById(id) {
 }
 
 function findByEmail(email) {
+    console.log("MY EMAIL -->>", email);
     return db("account").where({ email: email }).first();
 }
 

@@ -9,6 +9,7 @@ const Hash_tools = require('../tools/hash_tools');
     TODO: choose which info is sent
         (e.g. no hashed_pin, restricted Stripe info) */
 router.get('/login', (req, res) => {
+  //console.log("THIS JWT ->", req.jwt);
   if (!req.jwt) {
     res.status(400).json({ message: 'No JWT; could not authorize.' });
   } else {
