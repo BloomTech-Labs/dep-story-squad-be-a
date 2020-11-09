@@ -56,32 +56,11 @@ router.patch('/:student_id', (req, res) => {
             console.log('account', account);
             if (account.email == req.jwt.claims.email) {
               let studentData = req.body;
-              // if (studentData.settings) {
-              //   let updatedData = {};
-              //   updatedData.settings = studentData.settings;
-              // }
-              // if (studentData.records) {
-              //   updatedData.records = studentData.records;
-              // }
               Student.update(studentData, student_id).then(
                 (updated_student) => {
                   res.status(200).json(updated_student);
                 }
               );
-              console.log('STUDENT DATA IN NEST', studentData);
-              // const hash = Hash_tools.hasher('1111');
-              // if (student.hashed_pin != hash) {
-              //   console.log(
-              //     'line 62 condition on hash match',
-              //     student.hashed_pin,
-              //     hash
-              //   );
-              //   res.status(401).json({ message: 'PIN mismatch.' });
-              // } else {
-              //   control updateable data here
-              //   updatedData = { hashed_pin: hash };
-
-              // }
             } else {
               res.status(401).json({
                 message:
@@ -119,7 +98,6 @@ router.patch('/:student_id', (req, res) => {
 //   console.log(new_student);
 // });
 router.post('/', (req, res) => {
-  console.log('why the f not', req.body);
   // Associates new student with logged-in account
   const username = req.body.username;
   Student.findByUsername(username)
