@@ -5,12 +5,8 @@
   "scripts": {
     "start": "node ./api/bin/server.js",
     "tests": "npx jest --forceExit",
-    "lint": "npx eslint .",
-    "lint:fix": "npx eslint --fix .",
-    "format": "npx prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|md)\"",
     "server": "nodemon",
-    "knex": "npx knex --knexfile config/knexfile.js",
-    "coverage": "CI=true npx jest --coverage --detectOpenHandles --forceExit"
+    "knex": "npx knex --knexfile config/knexfile.js"
   },
   "jest": {
     "testEnvironment": "node",
@@ -42,6 +38,7 @@
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
     "express": "~4.16.1",
+    "express-session": "^1.17.1",
     "faker": "^4.1.0",
     "helmet": "^3.23.1",
     "http-errors": "~1.8.0",
