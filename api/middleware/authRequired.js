@@ -22,9 +22,9 @@ const testJWT = {
 };
 
 /**
- * A simple middleware that asserts valid access tokens and sends 401 responses
- * if the token is not present or fails validation.  If the token is valid its
- * contents are attached to req.jwt
+ * A simple middleware that asserts valid Okta idToken and sends 401 responses
+ * if the token is not present or fails validation. If the token is valid its
+ * contents are attached to req.profile
  */
 const authRequired = async (req, res, next) => {
   try {

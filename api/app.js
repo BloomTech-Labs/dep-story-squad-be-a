@@ -21,13 +21,16 @@ const storyRouter = require('./routes/story');
 const stripeRouter = require('./routes/stripe');
 const studentRouter = require('./routes/student');
 
-var app = express();
+const app = express();
 
 app.use('/apidoc', express.static('../apidoc'));
 app.use(helmet());
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
   next();
 });
 app.use(
@@ -51,15 +54,17 @@ const oidc = new ExpressOIDC({
   scope: 'openid profile',
   routes: {
     loginCallback: {
-      path: '/callback'
+      path: '/callback',
     },
-  }
+  },
 });
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: false
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: false,
+  })
+);
 app.use(oidc.router);
 
 // application routes
@@ -73,11 +78,11 @@ app.use('/api/stripe', stripeRouter);
 app.use('/api/student', authRequired, studentRouter);
 
 app.get('/api', (req, res) => {
-  res.status(200).json({ api: "up" });
+  res.status(200).json({ api: 'up' });
 });
 
 app.get('/', (req, res) => {
-  res.status(200).json({ api: "up" });
+  res.status(200).json({ api: 'up' });
 });
 
 module.exports = app;
