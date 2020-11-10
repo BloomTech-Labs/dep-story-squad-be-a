@@ -1,10 +1,10 @@
-const db = require("../../data/db-config.js");
+const db = require('../../data/db-config.js');
 
 module.exports = {
-    findById
-}
+  findById,
+};
 
 function findById(id) {
-    // reading_id is a UUID string
-    return db("reading").where({ reading_id: id }).first();
+  // reading_id is a UUID string
+  return db('reading').where({ reading_id: id }).first();
 }

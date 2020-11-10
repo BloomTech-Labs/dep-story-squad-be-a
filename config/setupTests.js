@@ -8,7 +8,7 @@ console.log('config_result', config_result);
 if (config_result.error) {
   throw config_result.error;
 }
-require("core-js/stable");
-require("regenerator-runtime/runtime");
+require('core-js/stable');
+require('regenerator-runtime/runtime');
 
 module.exports = dotenv;

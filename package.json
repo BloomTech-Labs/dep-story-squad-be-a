@@ -5,8 +5,12 @@
   "scripts": {
     "start": "node ./api/bin/server.js",
     "tests": "npx jest --forceExit",
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint --fix .",
+    "format": "npx prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|md)\"",
     "server": "nodemon",
-    "knex": "npx knex --knexfile config/knexfile.js"
+    "knex": "npx knex --knexfile config/knexfile.js",
+    "coverage": "CI=true npx jest --coverage --detectOpenHandles --forceExit"
   },
   "jest": {
     "testEnvironment": "node",

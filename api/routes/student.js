@@ -121,9 +121,11 @@ router.post('/', (req, res) => {
                   student.account_id
                 )
                   .then((updated_account) => {
+                    console.log(updated_account);
                     res.status(201).json(student);
                   })
                   .catch((err) => {
+                    console.log(err);
                     res.status(500).json({
                       message: 'Failed to update account list of student IDs.',
                     });

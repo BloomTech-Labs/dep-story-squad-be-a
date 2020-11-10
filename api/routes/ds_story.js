@@ -36,8 +36,9 @@ router.patch('/:story_id', (req, res) => {
       });
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).json({ message: 'Failed to access story.' });
     });
 });
 
-module.exports = router
+module.exports = router;

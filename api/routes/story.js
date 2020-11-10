@@ -46,17 +46,21 @@ router.patch('/:story_id', (req, res) => {
           Account.findById(student.account_id)
             .then((account) => {
               if (account.email != req.jwt.claims.email) {
-                res
-                  .status(403)
-                  .json({
-                    message: 'Story not associated with logged-in account.',
-                  });
+                res.status(403).json({
+                  message: 'Story not associated with logged-in account.',
+                });
               } else {
-                  // Control what info can be updated here
-                  let updated_info = {}
-                  if (req.body.s3_url){ updated_info.s3_url = req.body.s3_url }
-                  if (req.body.s3_key){ updated_info.s3_key = req.body.s3_key }
-                  if (req.body.about){ updated_info.about = req.body.about }
+                // Control what info can be updated here
+                let updated_info = {};
+                if (req.body.s3_url) {
+                  updated_info.s3_url = req.body.s3_url;
+                }
+                if (req.body.s3_key) {
+                  updated_info.s3_key = req.body.s3_key;
+                }
+                if (req.body.about) {
+                  updated_info.about = req.body.about;
+                }
                 Story.update(updated_info, story_id)
                   .then((updated_story) => {
                     res.status(200).json(updated_story);
@@ -69,31 +73,24 @@ router.patch('/:story_id', (req, res) => {
               }
             })
             .catch((err) => {
-              res
-                .status(500)
-                .json({
-                  message:
-                    'Error retrieving user info for story author account.',
-                  error: err,
-                });
+              res.status(500).json({
+                message: 'Error retrieving user info for story author account.',
+                error: err,
+              });
             });
         })
         .catch((err) => {
-          res
-            .status(500)
-            .json({
-              message: 'Error retrieving info for story author (student).',
-              error: err,
-            });
+          res.status(500).json({
+            message: 'Error retrieving info for story author (student).',
+            error: err,
+          });
         });
     })
     .catch((err) => {
-      res
-        .status(500)
-        .json({
-          message: 'Error retrieving story by ID parameter.',
-          error: err,
-        });
+      res.status(500).json({
+        message: 'Error retrieving story by ID parameter.',
+        error: err,
+      });
     });
 });
 
@@ -102,12 +99,12 @@ router.post('/', (req, res) => {
     res.status(400).json({ message: 'Student ID required.' });
   }
   const new_story = {
-      student_id: req.body.student_id,
-      prompt_id: req.body.prompt_id,
-      s3_url: req.body.s3_url || '',
-      s3_key: req.body.s3_key || '',
-      about: req.body.about || {}
-  }
+    student_id: req.body.student_id,
+    prompt_id: req.body.prompt_id,
+    s3_url: req.body.s3_url || '',
+    s3_key: req.body.s3_key || '',
+    about: req.body.about || {},
+  };
   Story.add(new_story)
     .then((story) => {
       res.status(200).json(story);

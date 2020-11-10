@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 
-function hasher(text, size) {
+function hasher(text) {
   const hash = bcrypt.hashSync(text, 4);
 
   return hash;
