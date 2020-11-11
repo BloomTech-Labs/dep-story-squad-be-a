@@ -42,6 +42,30 @@ router.get('/:student_id', (req, res) => {
     });
 });
 
+router.post('/pin-check/:student_id', (req, res) => {
+  // Protected by authRequired
+  // Will only retrieve info for student associated with logged-in account
+  const pin = req.body.pin;
+  const { student_id } = req.params;
+  console.log('body in req', req.body);
+  Student.findById(student_id)
+    .then((student) => {
+      if (student && Hash_tools.compare(pin, student.hashed_pin)) {
+        res.status(200).json(student);
+      } else {
+        res.status(404).json({
+          message: `Pin does not match the pen we have on file for you ${student.username}.`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: 'Error retrieving student info for ID param.',
+        error: err,
+      });
+    });
+});
+
 router.patch('/:student_id', (req, res) => {
   // Protected by authRequired
   // Will only update info for student associated with logged-in account
