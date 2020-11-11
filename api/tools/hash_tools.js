@@ -5,7 +5,13 @@ function hasher(text, size) {
 
   return hash;
 }
+function compare(text, compared) {
+  const hash = bcrypt.compareSync(text, compared);
+
+  return hash;
+}
 
 module.exports = {
   hasher,
+  compare,
 };
