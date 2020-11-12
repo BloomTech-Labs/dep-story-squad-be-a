@@ -9,12 +9,14 @@ const Hash_tools = require('../tools/hash_tools');
     TODO: choose which info is sent
         (e.g. no hashed_pin, restricted Stripe info) */
 router.get('/login', (req, res) => {
+  // console.log(req.jwt);
   if (!req.jwt) {
     res.status(400).json({ message: 'No JWT; could not authorize.' });
   } else {
     const email = req.jwt.claims.email;
     Account.findByEmail(email)
       .then((user) => {
+        // console.log(user);
         if (!user) {
           // if no user with logged-in email
           // (will need to POST /account/login)

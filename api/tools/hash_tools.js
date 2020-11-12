@@ -1,11 +1,17 @@
 const bcrypt = require('bcryptjs');
 
-module.exports = {
-    hasher
+function hasher(text, size) {
+  const hash = bcrypt.hashSync(text, 4);
+
+  return hash;
+}
+function compare(text, compared) {
+  const hash = bcrypt.compareSync(text, compared);
+
+  return hash;
 }
 
-function hasher(pin) {
-    const rounds = process.env.HASH_ROUNDS || 12;
-    const hash = bcrypt.hashSync(pin, rounds);
-    return hash;
-}
+module.exports = {
+  hasher,
+  compare,
+};
