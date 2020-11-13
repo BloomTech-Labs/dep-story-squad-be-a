@@ -1,43 +1,69 @@
-const createError = require('http-errors');
 const OktaJwtVerifier = require('@okta/jwt-verifier');
-const oktaVerifierConfig = require('../../config/okta');
-const Profiles = require('../profile/profileModel');
-const oktaJwtVerifier = new OktaJwtVerifier(oktaVerifierConfig.config);
 
-const makeProfileObj = (claims) => {
-  return {
-    id: claims.sub,
-    email: claims.email,
-    name: claims.name,
-  };
+// expectedAudience will be updated
+// (will require Okta account access)
+const expectedAudience = 'api://default';
+const oktaJwtVerifier = new OktaJwtVerifier({
+  // Okta environment variables set manually
+  // (only for testing!)
+  issuer: `${process.env.OKTA_URL_ISSUER}`,
+  clientId: `${process.env.OKTA_CLIENT_ID}`,
+  assertClaims: {
+    aud: expectedAudience,
+  },
+});
+
+const testJWT = {
+  claims: {
+    uid: '',
+    username: '',
+    email: '',
+  },
 };
+
 /**
- * A simple middleware that asserts valid Okta idToken and sends 401 responses
- * if the token is not present or fails validation. If the token is valid its
- * contents are attached to req.profile
+ * A simple middleware that asserts valid access tokens and sends 401 responses
+ * if the token is not present or fails validation.  If the token is valid its
+ * contents are attached to req.jwt
  */
 const authRequired = async (req, res, next) => {
   try {
+    if (process.env.NODE_ENV === 'testing') {
+      req.jwt = testJWT;
+      return next();
+    }
     const authHeader = req.headers.authorization || '';
     const match = authHeader.match(/Bearer (.+)/);
+    
+    if (!match) {
+      res.status(401).json({ message: 'Token mismatch in Okta middleware.' });
+    }
 
-    if (!match) throw new Error('Missing idToken');
-
-    const idToken = match[1];
+    const accessToken = match[1];
     oktaJwtVerifier
-      .verifyAccessToken(idToken, oktaVerifierConfig.expectedAudience)
-      .then(async (data) => {
-        const jwtUserObj = makeProfileObj(data.claims);
-        const profile = await Profiles.findOrCreateProfile(jwtUserObj);
-        if (profile) {
-          req.profile = profile;
-        } else {
-          throw new Error('Unable to process idToken');
-        }
+      .verifyAccessToken(accessToken, expectedAudience)
+      .then((jwt) => {
+        req.jwt = jwt;
         next();
+      })
+      .catch((err) => {
+        if (err.parsedBody.email) {
+          /* oktaJwtVerifier currently returns claims in error message.
+          If this middleware receives claims in err.parsedBody,
+          claims are attached to req.jwt and forwarded to router. */
+          req.jwt = {};
+          req.jwt.claims = err.parsedBody;
+          next();
+        } else {
+          res
+            .status(500)
+            .json({ message: 'Okta JWT validation failed.', error: err });
+        }
       });
   } catch (err) {
-    next(createError(401, err.message));
+    res
+      .status(500)
+      .json({ message: 'Error caught in Okta middleware.', error: err });
   }
 };
 
