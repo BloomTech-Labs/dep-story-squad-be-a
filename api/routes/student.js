@@ -1,10 +1,10 @@
-const router = require('express').Router();
+const router = require("express").Router();
 
-const Student = require('../models/studentModel.js');
-const Account = require('../models/accountModel.js');
-const Hash_tools = require('../tools/hash_tools');
+const Student = require("../models/studentModel.js");
+const Account = require("../models/accountModel.js");
+const Hash_tools = require("../tools/hash_tools");
 
-router.get('/:student_id', (req, res) => {
+router.get("/:student_id", (req, res) => {
   // Protected by authRequired
   // Will only retrieve info for student associated with logged-in account
   const { student_id } = req.params;
@@ -18,36 +18,33 @@ router.get('/:student_id', (req, res) => {
             } else {
               res.status(401).json({
                 message:
-                  'Account email for student does not match logged-in email.',
+                  "Account email for student does not match logged-in email.",
               });
             }
           })
           .catch((err) => {
             res.status(500).json({
-              message: 'Error retrieving info for found student.',
+              message: "Error retrieving info for found student.",
               error: err,
             });
           });
       } else {
         res
           .status(404)
-          .json({ message: 'Could not find student with given id.' });
+          .json({ message: "Could not find student with given id." });
       }
     })
     .catch((err) => {
       res.status(500).json({
-        message: 'Error retrieving student info for ID param.',
+        message: "Error retrieving student info for ID param.",
         error: err,
       });
     });
 });
 
-router.post('/pin-check/:student_id', (req, res) => {
-  // Protected by authRequired
-  // Will only retrieve info for student associated with logged-in account
+router.post("/pin-check/:student_id", (req, res) => {
   const pin = req.body.pin;
   const { student_id } = req.params;
-  console.log('body in req', req.body);
   Student.findById(student_id)
     .then((student) => {
       if (student && Hash_tools.compare(pin, student.hashed_pin)) {
@@ -60,13 +57,13 @@ router.post('/pin-check/:student_id', (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({
-        message: 'Error retrieving student info for ID param.',
+        message: "Error retrieving student info for ID param.",
         error: err,
       });
     });
 });
 
-router.patch('/:student_id', (req, res) => {
+router.patch("/:student_id", (req, res) => {
   // Protected by authRequired
   // Will only update info for student associated with logged-in account
   const { student_id } = req.params;
@@ -85,46 +82,37 @@ router.patch('/:student_id', (req, res) => {
             } else {
               res.status(401).json({
                 message:
-                  'Account email for student does not match logged-in email.',
+                  "Account email for student does not match logged-in email.",
               });
             }
           })
           .catch((err) => {
             res.status(500).json({
-              message: 'Error retrieving account for student.',
+              message: "Error retrieving account for student.",
               error: err.message,
             });
           });
       } else {
         res
           .status(404)
-          .json({ message: 'Could not find student with given id.' });
+          .json({ message: "Could not find student with given id." });
       }
     })
     .catch((err) => {
       res.status(500).json({
-        message: 'Error retrieving student info for ID parameter.',
+        message: "Error retrieving student info for ID parameter.",
         error: err,
       });
     });
 });
-// router.post('/', (req, res) => {
-//   let studentData = req.body;
-//   const hash = Hash_tools.hasher(studentData.pin, 8);
-//   const new_student = {
-//     username: studentData.username,
-//     account_id: studentData.account_id,
-//     hashed_pin: hash,
-//   };
-//   console.log(new_student);
-// });
-router.post('/', (req, res) => {
+
+router.post("/", (req, res) => {
   // Associates new student with logged-in account
   const username = req.body.username;
   Student.findByUsername(username)
     .then((found_student) => {
       if (found_student) {
-        res.status(409).json({ message: 'Username already taken.' });
+        res.status(409).json({ message: "Username already taken." });
       } else {
         let studentData = req.body;
         const hash = Hash_tools.hasher(studentData.pin, 4);
@@ -149,14 +137,13 @@ router.post('/', (req, res) => {
                   })
                   .catch((err) => {
                     res.status(500).json({
-                      message: 'Failed to update account list of student IDs.',
+                      message: "Failed to update account list of student IDs.",
                     });
                   });
               })
               .catch((err) => {
-                console.log(err.message);
                 res.status(500).json({
-                  message: 'Error retrieving account for student.',
+                  message: "Error retrieving account for student.",
                   error: err,
                 });
               });
@@ -164,14 +151,13 @@ router.post('/', (req, res) => {
           .catch((err) => {
             res
               .status(500)
-              .json({ message: 'Failed to add student', error: err.message });
+              .json({ message: "Failed to add student", error: err.message });
           });
       }
     })
     .catch((err) => {
-      console.log('err message', err.message);
       res.status(500).json({
-        message: 'Error retrieving student by req.body.username.',
+        message: "Error retrieving student by req.body.username.",
         error: err,
       });
     });
