@@ -58,27 +58,14 @@ Table info can be viewed in the [/documentation/DBDOCS.md](./documentation/DBDOC
 - Allows offline payment processing
 - Financial information is never saved to Story Squad database
 
-## Getting Started -- DEPRECATED
-
-- These setup steps were included in the project scaffold, but should no longer be necessary.
-
-- Install [docker](https://docs.docker.com/get-docker/) for your platform
-- Fork and clone the repo to install it as your own remote.
-
-  - **note** please [be sure to set your remote](https://help.github.jp/enterprise/2.11/user/articles/changing-a-remote-s-url/) for this repo to point to your Labs Team Repository.
-  - Alternatively you can clone this repo then remove the git folder to initialize a new repo
-
-    ```bash
-    > git clone --depth=1 --branch=master git@github.com:Lambda-School-Labs/labs-api-starter.git NEW-REPO-NAME
-    > rm -rf ./NEW-REPO-NAME/.git
-    ```
+## Getting Started
 
 - run: `npm install` to download all dependencies.
-- run: `docker-compose up` to start up the postgresql database.
+- You will need to set up a database connection for local development and establish the connection in the env under database_url <br>example-- postgresql://postgres:password@localhost/storysquad-dev
+- you will also need to set up the rest of your env variables.. see labs-28 demo video for further assistance
 - run: `npm run knex -- migrate:latest` to create the starting schema.
 - run: `npm run knex -- seed:run` to populate your db with some data.
-- run: `npm run tests` to confirm all is setup and tests pass.
-- run: `npm start` to start your local development server.
+- run: `npm run server` to start your local development server.
 
 ## Environment Variables for Dev/Testing
 
